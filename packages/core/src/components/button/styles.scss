@@ -6,15 +6,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--mdk-button-radius);
-  font-size: var(--mdk-button-font-size);
-  line-height: var(--mdk-button-line-height);
-  font-weight: var(--mdk-button-font-weight);
+  border-radius: var(--mdk-radius);
+  font-size: var(--mdk-font-size);
+  line-height: var(--mdk-line-height);
+  font-weight: var(--mdk-font-weight);
   gap: 0.5rem;
   border: 1px solid transparent;
   cursor: pointer;
   transition: colors 0.2s;
-  box-shadow: var(--mdk-button-shadow);
+  box-shadow: var(--mdk-shadow);
 
   &:focus-visible {
     outline: none;
