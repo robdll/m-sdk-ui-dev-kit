@@ -38,6 +38,24 @@
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
 
+    /* Brand Colors */
+    --mdk-color-primary: #f7931a;
+    --mdk-color-success: #72f59e;
+    --mdk-color-error: #ef4444;
+    --mdk-color-warning: #ffc107;
+
+    /* Backgrounds */
+    --mdk-color-background-dark: #17130f;
+    --mdk-color-background-light: #e5e7eb;
+    --mdk-color-surface: #0e0e0e;
+
+    /* Common Component Colors */
+    --mdk-color-white: #ffffff;
+
+    /* Switch specific colors */
+    --mdk-switch-unchecked-bg: var(--mdk-color-background-light);
+    --mdk-switch-thumb-shadow: rgba(0, 0, 0, 0.2);
+    --mdk-switch-thumb-shadow-checked: rgba(0, 0, 0, 0.3);
     /* MDK button tokens (moria baseline) */
     --mdk-button-radius: 0px;
     --mdk-button-font-size: 14px;
