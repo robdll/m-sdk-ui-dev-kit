@@ -4,7 +4,6 @@ import { cn } from '../../utils'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'outline' | 'ghost' | 'link'
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon'
-export type ButtonType = 'primary' | 'default' | 'dashed' | 'text' | 'link'
 export type ButtonIconPosition = 'left' | 'right'
 export type ButtonAntdSize = 'small' | 'middle' | 'large'
 export type ButtonColor = 'primary' | 'secondary' | 'danger' | 'ghost' | 'link' | 'outline'
@@ -12,8 +11,6 @@ export type ButtonColor = 'primary' | 'secondary' | 'danger' | 'ghost' | 'link' 
 export type ButtonProps = {
   variant?: ButtonVariant
   size?: ButtonSize | ButtonAntdSize
-  type?: ButtonType
-  htmlType?: React.ButtonHTMLAttributes<HTMLButtonElement>['type']
   danger?: boolean
   loading?: boolean
   icon?: React.ReactNode
@@ -21,23 +18,7 @@ export type ButtonProps = {
   fullWidth?: boolean
   block?: boolean
   color?: ButtonColor
-} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'>
-
-function typeToVariant(type?: ButtonType): ButtonVariant | undefined {
-  switch (type) {
-    case 'primary':
-      return 'primary'
-    case 'link':
-      return 'link'
-    case 'text':
-      return 'ghost'
-    case 'dashed':
-      return 'outline'
-    case 'default':
-    default:
-      return 'secondary'
-  }
-}
+} & React.ButtonHTMLAttributes<HTMLButtonElement>
 
 function sizeToSize(size?: string): ButtonSize {
   switch (size) {
@@ -72,8 +53,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       variant,
       size = 'md',
-      type,
-      htmlType,
       danger,
       loading,
       icon,
@@ -82,15 +61,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       block,
       color,
       disabled,
+      type: nativeType,
       children,
       ...props
     },
     ref,
   ) => {
-    const resolvedVariant =
-      variant ?? (danger ? 'danger' : (color ?? typeToVariant(type) ?? 'secondary'))
+    const resolvedVariant = variant ?? (danger ? 'danger' : (color ?? 'secondary'))
     const resolvedSize = sizeToSize(size)
-    const resolvedHtmlType = htmlType ?? 'button'
+    const resolvedHtmlType = nativeType ?? 'button'
     const isIconOnly = Boolean(icon) && !children
 
     const classes = cn(
