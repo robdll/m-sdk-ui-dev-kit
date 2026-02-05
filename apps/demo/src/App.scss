@@ -94,6 +94,22 @@
       margin: 0;
     }
   }
+
+  &__select-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+  }
+
+  &__select-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__select-item {
+    max-width: 220px;
+  }
 }
 
 .is-demo-hover.mdk-button--variant-primary {

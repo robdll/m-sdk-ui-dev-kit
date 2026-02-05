@@ -24,13 +24,36 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  Dropdown,
   Label,
+  Select,
   Switch,
 } from '@mining-sdk/core'
 
 import './App.scss'
 
 function App(): JSX.Element {
+  const selectOptions = [
+    { value: 'item-1', label: 'Item 1' },
+    { value: 'item-2', label: 'Item 2' },
+    { value: 'item-3', label: 'Item 3' },
+    { value: 'item-4', label: 'Item 4' },
+  ]
+
+  const dropdownItems = [
+    {
+      key: 'group-1',
+      type: 'group' as const,
+      label: 'Items',
+      children: [
+        { key: 'item-1', label: 'Item 1' },
+        { key: 'item-2', label: 'Item 2' },
+        { key: 'item-3', label: 'Item 3' },
+        { key: 'item-4', label: 'Item 4' },
+      ],
+    },
+  ]
+
   return (
     <div className="demo-app">
       <h1 className="demo-app__title">@mining-sdk/core Component Demo</h1>
@@ -70,6 +93,56 @@ function App(): JSX.Element {
             <Button className="is-demo-hover" variant="outline">
               Outline
             </Button>
+          </div>
+        </section>
+
+        {/* Select & Dropdown */}
+        <section className="demo-section">
+          <h2 className="demo-section__title">Select & Dropdown</h2>
+          <div className="demo-section__select-grid">
+            <div className="demo-section__select-column">
+              <h3>States</h3>
+              <div className="demo-section__select-item">
+                <Select placeholder="Dropdown" options={selectOptions} />
+              </div>
+              <div className="demo-section__select-item">
+                <Select placeholder="Dropdown" options={selectOptions} disabled />
+              </div>
+              <div className="demo-section__select-item">
+                <Select placeholder="Dropdown" options={selectOptions} value="item-4" />
+              </div>
+            </div>
+
+            <div className="demo-section__select-column">
+              <h3>Tags</h3>
+              <div className="demo-section__select-item">
+                <Select
+                  mode="tags"
+                  placeholder="Search"
+                  tokenSeparators={[',']}
+                  options={selectOptions}
+                  value={['item-1', 'item-3']}
+                />
+              </div>
+              <div className="demo-section__select-item">
+                <Select
+                  mode="tags"
+                  placeholder="Add tags"
+                  tokenSeparators={[',']}
+                  options={selectOptions}
+                />
+              </div>
+            </div>
+
+            <div className="demo-section__select-column">
+              <h3>Dropdown</h3>
+              <Dropdown menu={{ items: dropdownItems }} placement="bottomLeft">
+                <Button variant="secondary">Dropdown</Button>
+              </Dropdown>
+              <Dropdown menu={{ items: dropdownItems }} placement="bottomLeft" open>
+                <Button variant="secondary">Dropdown (Open)</Button>
+              </Dropdown>
+            </div>
           </div>
         </section>
 

@@ -11,7 +11,9 @@
 @use './components/button/styles' as button;
 @use './components/checkbox/styles' as checkbox;
 @use './components/dialog/styles' as dialog;
+@use './components/dropdown-menu/styles' as dropdownMenu;
 @use './components/label/styles' as label;
+@use './components/select/styles' as select;
 @use './components/switch/styles' as switch;
 
 // CSS Variables
@@ -77,6 +79,29 @@
     --mdk-button-danger-bg: #ef4444;
     --mdk-button-danger-text: #ffffff;
     --mdk-button-danger-border: #ef4444;
+
+    /* Input / Select tokens (moria baseline) */
+    --mdk-input-bg: #2f2f2f;
+    --mdk-input-bg-hover: #3a3a3a;
+    --mdk-input-text: #d7d7d7;
+    --mdk-input-placeholder: #8b8b8b;
+    --mdk-input-border: #3a3a3a;
+    --mdk-input-border-hover: #5a5a5a;
+    --mdk-input-border-active: #f7931a;
+    --mdk-input-border-error: #ef4444;
+    --mdk-input-radius: 2px;
+    --mdk-input-focus-shadow: 0 0 0 2px rgba(247, 147, 26, 0.25);
+
+    /* Dropdown / menu tokens */
+    --mdk-dropdown-bg: #1b140f;
+    --mdk-dropdown-border: #3a2d1d;
+    --mdk-dropdown-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    --mdk-dropdown-item-text: #c9c9c9;
+    --mdk-dropdown-item-hover-bg: #2d2116;
+    --mdk-dropdown-item-hover-text: #ffffff;
+    --mdk-dropdown-item-selected-bg: #3a2a18;
+    --mdk-dropdown-item-selected-text: #f7931a;
+    --mdk-dropdown-divider: #2b2118;
   }
 
   .dark {
