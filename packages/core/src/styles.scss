@@ -14,6 +14,45 @@
 @use './components/tabs/styles' as tabs;
 @use './components/label/styles' as label;
 @use './components/switch/styles' as switch;
+@use './components/typography/styles' as typography;
+@use './components/breadcrumbs/styles' as breadcrumbs;
+
+/* JetBrains Mono */
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: optional;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: optional;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: optional;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: optional;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: optional;
+}
 
 // CSS Variables
 @layer base {
@@ -56,6 +95,13 @@
     --mining-sdk-color-text-secondary: #ffffffd9;
     --mining-sdk-color-text-disabled: #ffffff80;
 
+    /* Breadcrumbs specific colors */
+    --mining-sdk-breadcrumbs-separator-color: var(--mining-sdk-color-primary);
+    --mining-sdk-breadcrumbs-link-color: var(--mining-sdk-color-grey-idle);
+    --mining-sdk-breadcrumbs-link-hover-color: var(--mining-sdkcolor-primary);
+    --mining-sdk-breadcrumbs-link-current-color: var(--mining-sdk-color-grey-idle);
+    --mining-sdk-breadcrumbs-back-button-color: var(--mining-sdk-color-primary);
+
     /* Switch specific colors */
     --mining-sdk-switch-unchecked-bg: var(--mining-sdk-color-background-light);
     --mining-sdk-switch-thumb-shadow: rgba(0, 0, 0, 0.2);
@@ -81,7 +127,6 @@
     --mining-sdk-button-danger-bg: #ef4444;
     --mining-sdk-button-danger-text: #ffffff;
     --mining-sdk-button-danger-border: #ef4444;
-
   }
 
   .dark {
@@ -116,5 +161,6 @@
   body {
     background: hsl(var(--background));
     color: hsl(var(--foreground));
+    font-family: 'JetBrains Mono', sans-serif;
   }
 }

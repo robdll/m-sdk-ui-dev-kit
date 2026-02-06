@@ -100,10 +100,25 @@
     margin-bottom: 16px;
     background-color: var(--mining-sdk-color-background-dark);
   }
+
+  &__typography {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    &--title {
+      margin: 2rem 0;
+    }
+  }
+
+  &__breadcrumbs {
+    margin-bottom: 2rem;
+  }
 }
 
 .is-demo-hover.mining-sdk-button--variant-primary {
-  background: linear-gradient(
+  background:
+    linear-gradient(
       0deg,
       var(--mining-sdk-button-primary-bg-hover-overlay) 0%,
       var(--mining-sdk-button-primary-bg-hover-overlay) 100%
