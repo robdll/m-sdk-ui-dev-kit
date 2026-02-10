@@ -38,6 +38,23 @@
     cursor: not-allowed;
     opacity: 0.7;
   }
+
+  &--error {
+    .mining-sdk-input {
+      border-color: var(--mining-sdk-color-error, #ef4444);
+    }
+
+    .mining-sdk-input:hover:not(:disabled):not(:focus),
+    .mining-sdk-input:focus {
+      border-color: var(--mining-sdk-color-error, #ef4444);
+    }
+  }
+}
+
+.mining-sdk-input__error {
+  font-size: var(--mining-sdk-font-size, 14px);
+  line-height: var(--mining-sdk-line-height, 22px);
+  color: var(--mining-sdk-color-error, #ef4444);
 }
 
 .mining-sdk-input__icon {

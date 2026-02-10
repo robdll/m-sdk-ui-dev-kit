@@ -21,6 +21,10 @@ export type InputProps = Omit<React.ComponentProps<'input'>, 'prefix' | 'suffix'
    */
   variant?: 'default' | 'search'
   /**
+   * Validation error message. When provided, displays error styling (red border) and the message below the input.
+   */
+  error?: string
+  /**
    * Custom className for the root wrapper
    */
   wrapperClassName?: string
@@ -36,9 +40,14 @@ export type InputProps = Omit<React.ComponentProps<'input'>, 'prefix' | 'suffix'
  * ```
  */
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, wrapperClassName, label, id, variant = 'default', disabled, ...props }, ref) => {
+  (
+    { className, wrapperClassName, label, id, variant = 'default', disabled, error, ...props },
+    ref,
+  ) => {
     const inputId = id ?? React.useId()
+    const errorId = `${inputId}-error`
     const showSearchIcon = variant === 'search'
+    const hasError = !!error
 
     const input = (
       <div
@@ -46,6 +55,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           'mining-sdk-input__wrapper',
           showSearchIcon && 'mining-sdk-input__wrapper--search',
           disabled && 'mining-sdk-input__wrapper--disabled',
+          hasError && 'mining-sdk-input__wrapper--error',
           !label && wrapperClassName,
         )}
       >
@@ -54,8 +64,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           disabled={disabled}
           className={cn('mining-sdk-input', className)}
-          aria-invalid={props['aria-invalid']}
-          aria-describedby={props['aria-describedby']}
+          aria-invalid={hasError || props['aria-invalid']}
+          aria-describedby={hasError ? errorId : props['aria-describedby']}
           {...props}
         />
         {showSearchIcon && (
@@ -66,18 +76,29 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       </div>
     )
 
+    const content = (
+      <>
+        {input}
+        {hasError && (
+          <span id={errorId} className="mining-sdk-input__error" role="alert">
+            {error}
+          </span>
+        )}
+      </>
+    )
+
     if (label) {
       return (
         <div className={cn('mining-sdk-input-root', wrapperClassName)}>
           <Label htmlFor={inputId} className="mining-sdk-input__label">
             {label}
           </Label>
-          {input}
+          {content}
         </div>
       )
     }
 
-    return input
+    return content
   },
 )
 

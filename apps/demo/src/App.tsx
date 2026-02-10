@@ -320,6 +320,10 @@ const App = (): JSX.Element => {
                 id="mac-disabled"
               />
             </section>
+            <section>
+              <h3>Validation error</h3>
+              <Input label="Email" placeholder="Email" error="Email is required" id="email-error" />
+            </section>
           </div>
         </section>
         {/* Dialog */}
