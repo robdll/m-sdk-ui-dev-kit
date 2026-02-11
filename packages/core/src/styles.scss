@@ -24,6 +24,7 @@
 @use './components/tag/styles' as tag;
 @use './components/indicator/styles' as indicator;
 @use './components/select/styles' as select;
+@use './components/dropdown-menu/styles' as dropdown-menu;
 @use './components/toast/styles' as toast;
 
 /* JetBrains Mono */
@@ -161,7 +162,12 @@
     --mining-sdk-select-item-text: #e1e0e0;
     --mining-sdk-select-item-highlighted-text: #1a1a1a;
 
-    /* mining-sdk button tokens (moria baseline) */
+    /* Dropdown Menu specific colors */
+    --mining-sdk-dropdown-menu-content-bg: #1a1a1a;
+    --mining-sdk-dropdown-menu-item-text: #e1e0e0;
+    --mining-sdk-dropdown-menu-item-highlighted-text: #1a1a1a;
+
+    /* mining-sdk button tokens (mining-os baseline) */
     --mining-sdk-radius: 0px;
     --mining-sdk-font-size: 14px;
     --mining-sdk-line-height: 22px;
