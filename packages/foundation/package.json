@@ -39,6 +39,8 @@
     "clean": "rimraf dist node_modules .turbo",
     "dev": "tsc --watch",
     "lint": "eslint .",
+    "test": "vitest run --config vitest.config.js --maxConcurrency=5",
+    "test:watch": "vitest --watch",
     "lint:fix": "eslint . --fix",
     "format": "eslint . --fix",
     "typecheck": "tsc --noEmit"
@@ -56,10 +58,12 @@
   },
   "devDependencies": {
     "@reduxjs/toolkit": "catalog:",
+    "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitest/ui": "catalog:",
+    "jsdom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-redux": "catalog:",
