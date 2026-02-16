@@ -13,11 +13,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-  AreaChart,
   Avatar,
   AvatarFallback,
   AvatarImage,
-  BarChart,
   BarChartIcon,
   BellIcon,
   Breadcrumbs,
@@ -27,7 +25,6 @@ import {
   ChatBubbleIcon,
   Checkbox,
   CheckIcon,
-  computeStats,
   CubeIcon,
   DashboardIcon,
   DatePicker,
@@ -49,7 +46,6 @@ import {
   InputIcon,
   Label,
   LayersIcon,
-  LineChart,
   Loader,
   NotFoundPage,
   PersonIcon,
@@ -93,6 +89,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './App.scss'
 import { ControlledDialog } from './components/controlled-dialog'
 import { Icons } from './components/icons'
+import { AreaChartExample } from './examples/area-chart-example'
+import { BarChartExample } from './examples/bar-chart-example'
+import { LineChartExample } from './examples/line-chart-example'
 import PaginationExample from './examples/pagination-example'
 import { DemoTable } from './examples/demo-table'
 
@@ -532,131 +531,7 @@ const App = (): JSX.Element => {
               <p className="demo-section__description">
                 Presentational chart components. Data is passed via props; no fetching.
               </p>
-              <div className="demo-section__charts">
-                <section>
-                  <h3>Basic</h3>
-                  <ChartContainer title="Revenue over time">
-                    <LineChart
-                      height={250}
-                      data={{
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                        datasets: [
-                          {
-                            label: 'Revenue',
-                            data: [12, 19, 8, 15, 22, 18],
-                          },
-                        ],
-                      }}
-                    />
-                  </ChartContainer>
-                </section>
-                <section>
-                  <h3>Hash Rate style</h3>
-                  <ChartContainer
-                    title="Hash Rate"
-                    footer={(() => {
-                      const miningOsData = [75.46, 75.46, 75.48, 75.45, 75.47, 75.46]
-                      const stats = computeStats(miningOsData)
-                      return (
-                        <span>
-                          Min {stats.min.toFixed(2)} PH/s · Max {stats.max.toFixed(2)} PH/s · Avg{' '}
-                          {stats.avg.toFixed(2)} PH/s
-                        </span>
-                      )
-                    })()}
-                  >
-                    <LineChart
-                      height={250}
-                      formatYLabel={(v) => `${v.toFixed(2)} PH/s`}
-                      data={{
-                        labels: ['12:45', '12:50', '12:55', '13:00', '13:05', '13:10'],
-                        datasets: [
-                          {
-                            label: 'Mining OS Hash Rate',
-                            data: [75.46, 75.46, 75.48, 75.45, 75.47, 75.46],
-                            borderColor: 'hsl(180 70% 50%)',
-                          },
-                          {
-                            label: 'Aggr Pool Hash Rate',
-                            data: [58, 59, 60, 58, 59, 60],
-                            borderColor: 'hsl(220 70% 45%)',
-                          },
-                          {
-                            label: 'F2pool Hash Rate',
-                            data: [0, 0, 0, 0, 0, 0],
-                            borderColor: 'hsl(270 60% 60%)',
-                          },
-                          {
-                            label: 'Ocean Hash Rate',
-                            data: [58, 59, 60, 58, 59, 60],
-                            borderColor: 'hsl(0 70% 55%)',
-                          },
-                        ],
-                      }}
-                    />
-                  </ChartContainer>
-                </section>
-                <section>
-                  <h3>With points + footer</h3>
-                  <ChartContainer
-                    title="Temperature"
-                    footer={(() => {
-                      const vals = [22, 24, 23, 25, 26, 24]
-                      const s = computeStats(vals)
-                      return (
-                        <span>
-                          Min {s.min}°C · Max {s.max}°C · Avg {s.avg.toFixed(1)}°C
-                        </span>
-                      )
-                    })()}
-                  >
-                    <LineChart
-                      height={250}
-                      showPoints
-                      formatYLabel={(v) => `${v}°C`}
-                      data={{
-                        labels: ['06:00', '09:00', '12:00', '15:00', '18:00', '21:00'],
-                        datasets: [
-                          {
-                            label: 'Temperature',
-                            data: [22, 24, 23, 25, 26, 24],
-                          },
-                        ],
-                      }}
-                    />
-                  </ChartContainer>
-                </section>
-                <section>
-                  <h3>Currency format</h3>
-                  <ChartContainer
-                    title="Daily revenue"
-                    footer={(() => {
-                      const vals = [1200, 1350, 1100, 1420, 1380, 1500]
-                      const s = computeStats(vals)
-                      return (
-                        <span>
-                          Min ${s.min.toLocaleString()} · Max ${s.max.toLocaleString()} · Avg $
-                          {s.avg.toFixed(0)}
-                        </span>
-                      )
-                    })()}
-                  >
-                    <LineChart
-                      height={250}
-                      formatYLabel={(v) => `$${(v / 1000).toFixed(1)}k`}
-                      data={{
-                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-                        datasets: [
-                          {
-                            label: 'Revenue',
-                            data: [1200, 1350, 1100, 1420, 1380, 1500],
-                          },
-                        ],
-                      }}
-                    />
-                  </ChartContainer>
-                </section>
-              </div>
+              <LineChartExample />
             </section>
           )}
           {/* Pagination */}
@@ -774,25 +649,7 @@ const App = (): JSX.Element => {
           {activeSection === 'bar-chart' && (
             <section className="demo-section">
               <h2 className="demo-section__title">Bar Chart</h2>
-              <div className="demo-section__charts">
-                <section>
-                  <h3>Mining output</h3>
-                  <ChartContainer title="Mining output">
-                    <BarChart
-                      height={250}
-                      data={{
-                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                        datasets: [
-                          {
-                            label: 'TH/s',
-                            data: [65, 72, 68, 75, 70, 80, 78],
-                          },
-                        ],
-                      }}
-                    />
-                  </ChartContainer>
-                </section>
-              </div>
+              <BarChartExample />
             </section>
           )}
           {/* Input */}
@@ -930,25 +787,7 @@ const App = (): JSX.Element => {
           {activeSection === 'area-chart' && (
             <section className="demo-section">
               <h2 className="demo-section__title">Area Chart</h2>
-              <div className="demo-section__charts">
-                <section>
-                  <h3>Hashrate trend</h3>
-                  <ChartContainer title="Hashrate trend">
-                    <AreaChart
-                      height={250}
-                      data={{
-                        labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
-                        datasets: [
-                          {
-                            label: 'Hashrate',
-                            data: [100, 95, 110, 105, 120, 115],
-                          },
-                        ],
-                      }}
-                    />
-                  </ChartContainer>
-                </section>
-              </div>
+              <AreaChartExample />
             </section>
           )}
           {/* Charts - Gauge Chart */}
