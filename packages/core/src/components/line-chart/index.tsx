@@ -27,6 +27,8 @@ export type LineChartProps = {
   formatYLabel?: (value: number) => string
   /** Show data point dots (default: false) */
   showPoints?: boolean
+  /** Show built-in legend (default: true). Set false when using ChartContainer legendData */
+  showLegend?: boolean
   /** Chart height in pixels */
   height?: number
   className?: string
@@ -43,13 +45,28 @@ export type LineChartProps = {
  */
 export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
   (
-    { data, options, formatXLabel, formatYLabel, showPoints = false, height = 300, className },
+    {
+      data,
+      options,
+      formatXLabel,
+      formatYLabel,
+      showPoints = false,
+      showLegend = true,
+      height = 300,
+      className,
+    },
     ref,
   ) => {
     const mergedOptions = React.useMemo(() => {
       const base = {
         ...defaultChartOptions,
         ...options,
+      }
+      if (!showLegend) {
+        base.plugins = {
+          ...base.plugins,
+          legend: { ...base.plugins?.legend, display: false },
+        }
       }
       const scales = { ...base.scales }
       if (formatXLabel && scales?.x && 'ticks' in scales.x) {
@@ -83,7 +100,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
           },
         },
       }
-    }, [options, formatXLabel, formatYLabel, showPoints])
+    }, [options, formatXLabel, formatYLabel, showPoints, showLegend])
 
     const chartData = React.useMemo(() => {
       const datasets = data.datasets?.map((ds, i) => ({
@@ -98,7 +115,11 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
     }, [data, showPoints])
 
     return (
-      <div ref={ref} className={cn('mining-sdk-line-chart', className)} style={{ height }}>
+      <div
+        ref={ref}
+        className={cn('mining-sdk-line-chart', className)}
+        style={{ height, width: '100%' }}
+      >
         <Line data={chartData} options={mergedOptions} />
       </div>
     )
