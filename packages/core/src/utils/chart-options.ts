@@ -8,7 +8,7 @@ import { defaultChartColors } from '../constants/charts'
 export { defaultChartColors }
 
 /** Compute min, max, avg from a flat array of numbers */
-export function computeStats(values: number[]): { min: number, max: number, avg: number } {
+export function computeStats(values: number[]): { min: number; max: number; avg: number } {
   if (values.length === 0) return { min: 0, max: 0, avg: 0 }
   const min = Math.min(...values)
   const max = Math.max(...values)
@@ -46,7 +46,7 @@ type LegendLabelItem = {
 /** Build legend items from chart datasets (avoids Chart.defaults which may be uninitialized at module load) */
 function buildLegendLabels(chart: Chart): LegendLabelItem[] {
   const datasets = chart.data.datasets ?? []
-  const fontColor = '#4a4a4a'
+  const fontColor = 'rgba(255, 255, 255, 0.7)'
   return datasets.map((dataset, i) => {
     const meta = chart.getDatasetMeta(i)
     const strokeStyleRaw = dataset.borderColor ?? dataset.backgroundColor ?? '#888'
@@ -72,12 +72,16 @@ function buildLegendLabels(chart: Chart): LegendLabelItem[] {
 export const defaultChartOptions = {
   responsive: true,
   maintainAspectRatio: false,
+  layout: {
+    padding: 0,
+  },
   plugins: {
     legend: {
       display: true,
       position: 'top' as const,
+      align: 'start' as const,
       labels: {
-        color: '#4a4a4a',
+        color: 'rgba(255, 255, 255, 0.7)',
         font: { size: 12 },
         boxWidth: 10,
         boxHeight: 10,
