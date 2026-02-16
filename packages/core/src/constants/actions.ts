@@ -1,3 +1,5 @@
+import { WEBAPP_NAME } from './index'
+
 export const ACTION_TYPES = {
   // Container actions
   SWITCH_CONTAINER: 'switchContainer',
@@ -82,7 +84,7 @@ export const ACTION_NAMES_MAP = {
   [ACTION_TYPES.FORGET_THINGS]: 'Remove Thing',
 
   // Rack actions
-  [ACTION_TYPES.RACK_REBOOT]: `Reboot Application`,
+  [ACTION_TYPES.RACK_REBOOT]: `Reboot ${WEBAPP_NAME}`,
 } as const
 
 export const MINER_ACTIONS = [
