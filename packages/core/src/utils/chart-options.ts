@@ -8,7 +8,7 @@ import { defaultChartColors } from '../constants/charts'
 export { defaultChartColors }
 
 /** Compute min, max, avg from a flat array of numbers */
-export function computeStats(values: number[]): { min: number; max: number; avg: number } {
+export function computeStats(values: number[]): { min: number, max: number, avg: number } {
   if (values.length === 0) return { min: 0, max: 0, avg: 0 }
   const min = Math.min(...values)
   const max = Math.max(...values)
