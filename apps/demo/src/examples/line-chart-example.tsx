@@ -57,7 +57,8 @@ export const LineChartExample: React.FC = () => {
           title="Hash Rate"
           legendData={LINE_CHART_HASH_RATE.datasets.map((ds) => ({
             label: ds.label as string,
-            color: (ds.borderColor ?? ds.backgroundColor) as string,
+            color: (ds.borderColor ??
+              (ds as { backgroundColor?: string }).backgroundColor) as string,
           }))}
           highlightedValue={{
             value: hashRateStats.max.toFixed(3),

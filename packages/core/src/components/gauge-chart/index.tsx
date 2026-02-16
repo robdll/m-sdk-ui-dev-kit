@@ -1,3 +1,4 @@
+/// <reference path="../../types/react-gauge-chart.d.ts" />
 import * as React from 'react'
 import ReactGaugeChart from 'react-gauge-chart'
 import { cn } from '../../utils'
