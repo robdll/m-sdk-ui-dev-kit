@@ -2,7 +2,7 @@
  * Default chart options using theme colors
  */
 
-import type { Chart } from 'chart.js'
+import type { Chart, TooltipModel } from 'chart.js'
 import { defaultChartColors } from '../constants/charts'
 
 export { defaultChartColors }
@@ -26,6 +26,9 @@ const addColorOpacity = (color: string, opacity: number): string =>
   typeof color === 'string' && color.startsWith('hsl')
     ? color.replace(')', ` / ${opacity})`)
     : color
+
+const escapeHtml = (s: string): string =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
 /** Add opacity to a color (HSL or hex) for area fill - uses softer opacity than line */
 export const addColorOpacityForFill = (color: string, opacity = 0.15): string => {
@@ -85,6 +88,48 @@ export const defaultChartOptions = {
     padding: 0,
   },
   plugins: {
+    tooltip: {
+      enabled: false,
+      mode: 'index' as const,
+      intersect: false,
+      external: (context: { tooltip: TooltipModel<any>; chart: Chart }) => {
+        const { tooltip, chart } = context
+        let el = document.getElementById('mining-sdk-chart-tooltip')
+        if (!el) {
+          el = document.createElement('div')
+          el.id = 'mining-sdk-chart-tooltip'
+          el.style.cssText =
+            'position:absolute;padding:10px;background:rgba(0,0,0,0.8);color:#fff;font-size:12px;pointer-events:none;z-index:9999;border:none;border-radius:0'
+          document.body.appendChild(el)
+        }
+        if (tooltip.opacity === 0) {
+          el.style.opacity = '0'
+          return
+        }
+        const items = tooltip.dataPoints ?? []
+        const body = items
+          .map(
+            (item: {
+              dataset?: { label?: string; borderColor?: unknown; backgroundColor?: unknown }
+              formattedValue?: string
+            }) => {
+              const label = (item.dataset?.label as string) ?? ''
+              const value = item.formattedValue ?? ''
+              // Use dataset colors (same as legend) for value/unit; labels stay white
+              const rawColor = item.dataset?.borderColor ?? item.dataset?.backgroundColor ?? '#888'
+              const valueColor = typeof rawColor === 'string' ? rawColor : '#888'
+              return `<div style="display:flex;gap:0.5rem;align-items:baseline"><span style="color:#fff">${escapeHtml(label)}:</span> <span style="color:${escapeHtml(valueColor)}">${escapeHtml(value)}</span></div>`
+            },
+          )
+          .join('')
+        el.innerHTML = body
+        el.style.opacity = '1'
+        const rect = chart.canvas.getBoundingClientRect()
+        el.style.left = `${rect.left + tooltip.caretX + window.scrollX}px`
+        el.style.top = `${rect.top + tooltip.caretY + window.scrollY}px`
+        el.style.transform = `translate(-50%, -100%) translateY(-8px)`
+      },
+    },
     legend: {
       display: true,
       position: 'top' as const,
