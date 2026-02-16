@@ -8,13 +8,23 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
+import zoomPlugin from 'chartjs-plugin-zoom'
 import 'chartjs-adapter-date-fns'
 import * as React from 'react'
 import { Line } from 'react-chartjs-2'
 import { cn } from '../../utils'
 import { defaultChartColors, defaultChartOptions } from '../../utils/chart-options'
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  zoomPlugin,
+)
 
 export type LineChartProps = {
   /** Chart data - required, provided by parent */
@@ -29,6 +39,8 @@ export type LineChartProps = {
   showPoints?: boolean
   /** Show built-in legend (default: true). Set false when using ChartContainer legendData */
   showLegend?: boolean
+  /** Enable zoom (wheel/pinch) and pan (default: true) */
+  enableZoom?: boolean
   /** Chart height in pixels */
   height?: number
   className?: string
@@ -52,6 +64,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       formatYLabel,
       showPoints = false,
       showLegend = true,
+      enableZoom = true,
       height = 300,
       className,
     },
@@ -66,6 +79,29 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         base.plugins = {
           ...base.plugins,
           legend: { ...base.plugins?.legend, display: false },
+        }
+      }
+      if (enableZoom) {
+        base.plugins = {
+          ...base.plugins,
+          zoom: {
+            zoom: {
+              wheel: { enabled: true },
+              pinch: { enabled: true },
+              mode: 'x',
+            },
+            pan: {
+              enabled: true,
+              mode: 'x',
+            },
+            limits: {
+              x: {
+                min: 'original',
+                max: 'original',
+                minRange: 2,
+              },
+            },
+          },
         }
       }
       const scales = { ...base.scales }
@@ -100,7 +136,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
           },
         },
       }
-    }, [options, formatXLabel, formatYLabel, showPoints, showLegend])
+    }, [options, formatXLabel, formatYLabel, showPoints, showLegend, enableZoom])
 
     const chartData = React.useMemo(() => {
       const datasets = data.datasets?.map((ds, i) => ({
