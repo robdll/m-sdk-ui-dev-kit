@@ -9,7 +9,7 @@ export { defaultChartColors }
 
 /** Compute min, max, avg from a flat array of numbers */
 // eslint-disable-next-line style/member-delimiter-style
-export function computeStats(values: number[]): { min: number; max: number; avg: number } {
+export const computeStats = (values: number[]): { min: number; max: number; avg: number } => {
   if (values.length === 0) return { min: 0, max: 0, avg: 0 }
   const min = Math.min(...values)
   const max = Math.max(...values)
@@ -18,17 +18,14 @@ export function computeStats(values: number[]): { min: number; max: number; avg:
 }
 
 /** Get all numeric values from chart datasets */
-export function getDatasetValues(datasets: Array<{ data: (number | null)[] }>): number[] {
-  return datasets.flatMap((ds) => ds.data.filter((v): v is number => typeof v === 'number'))
-}
+export const getDatasetValues = (datasets: Array<{ data: (number | null)[] }>): number[] =>
+  datasets.flatMap((ds) => ds.data.filter((v): v is number => typeof v === 'number'))
 
 /** Add opacity to an HSL color string */
-function addColorOpacity(color: string, opacity: number): string {
-  if (typeof color === 'string' && color.startsWith('hsl')) {
-    return color.replace(')', ` / ${opacity})`)
-  }
-  return color
-}
+const addColorOpacity = (color: string, opacity: number): string =>
+  typeof color === 'string' && color.startsWith('hsl')
+    ? color.replace(')', ` / ${opacity})`)
+    : color
 
 type LegendLabelItem = {
   text: string
@@ -45,7 +42,7 @@ type LegendLabelItem = {
 }
 
 /** Build legend items from chart datasets (avoids Chart.defaults which may be uninitialized at module load) */
-function buildLegendLabels(chart: Chart): LegendLabelItem[] {
+const buildLegendLabels = (chart: Chart): LegendLabelItem[] => {
   const datasets = chart.data.datasets ?? []
   const fontColor = 'rgba(255, 255, 255, 0.7)'
   return datasets.map((dataset, i) => {
