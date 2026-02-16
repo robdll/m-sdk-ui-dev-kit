@@ -11,6 +11,12 @@ export const AreaChartExample: React.FC = () => {
           <AreaChart height={250} data={AREA_CHART_HASHRATE_TREND} />
         </ChartContainer>
       </section>
+      <section>
+        <h3>Legend bottom</h3>
+        <ChartContainer title="Hashrate">
+          <AreaChart height={250} data={AREA_CHART_HASHRATE_TREND} legendPosition="bottom" />
+        </ChartContainer>
+      </section>
     </div>
   )
 }

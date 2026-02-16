@@ -27,6 +27,17 @@ const addColorOpacity = (color: string, opacity: number): string =>
     ? color.replace(')', ` / ${opacity})`)
     : color
 
+/** Add opacity to a color (HSL or hex) for area fill - uses softer opacity than line */
+export const addColorOpacityForFill = (color: string, opacity = 0.15): string => {
+  if (typeof color === 'string' && color.startsWith('hsl')) {
+    return color.replace(')', ` / ${opacity})`)
+  }
+  const alpha = Math.round(opacity * 255)
+    .toString(16)
+    .padStart(2, '0')
+  return `${color}${alpha}`
+}
+
 type LegendLabelItem = {
   text: string
   fillStyle: string

@@ -39,6 +39,8 @@ export type LineChartProps = {
   showPoints?: boolean
   /** Show built-in legend (default: true). Set false when using ChartContainer legendData */
   showLegend?: boolean
+  /** Legend position (default: top) */
+  legendPosition?: 'top' | 'bottom' | 'left' | 'right'
   /** Enable zoom (wheel/pinch) and pan (default: true) */
   enableZoom?: boolean
   /** Chart height in pixels */
@@ -64,6 +66,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       formatYLabel,
       showPoints = false,
       showLegend = true,
+      legendPosition = 'top',
       enableZoom = true,
       height = 300,
       className,
@@ -75,11 +78,14 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         ...defaultChartOptions,
         ...options,
       }
-      if (!showLegend) {
-        base.plugins = {
-          ...base.plugins,
-          legend: { ...base.plugins?.legend, display: false },
-        }
+      base.plugins = {
+        ...base.plugins,
+        legend: {
+          ...base.plugins?.legend,
+          display: showLegend,
+          position: legendPosition,
+          align: legendPosition === 'bottom' || legendPosition === 'top' ? 'start' : 'center',
+        },
       }
       if (enableZoom) {
         base.plugins = {
@@ -136,7 +142,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
           },
         },
       }
-    }, [options, formatXLabel, formatYLabel, showPoints, showLegend, enableZoom])
+    }, [options, formatXLabel, formatYLabel, showPoints, showLegend, legendPosition, enableZoom])
 
     const chartData = React.useMemo(() => {
       const datasets = data.datasets?.map((ds, i) => ({

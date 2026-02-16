@@ -13,7 +13,11 @@ import 'chartjs-adapter-date-fns'
 import * as React from 'react'
 import { Line } from 'react-chartjs-2'
 import { cn } from '../../utils'
-import { defaultChartColors, defaultChartOptions } from '../../utils/chart-options'
+import {
+  addColorOpacityForFill,
+  defaultChartColors,
+  defaultChartOptions,
+} from '../../utils/chart-options'
 
 ChartJS.register(
   CategoryScale,
@@ -31,6 +35,8 @@ export type AreaChartProps = {
   data: ChartJS<'line'>['data']
   /** Chart.js options - merged with defaults */
   options?: ChartJS<'line'>['options']
+  /** Legend position (default: top) */
+  legendPosition?: 'top' | 'bottom' | 'left' | 'right'
   /** Chart height in pixels */
   height?: number
   className?: string
@@ -46,14 +52,19 @@ export type AreaChartProps = {
  * ```
  */
 export const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
-  ({ data, options, height = 300, className }, ref) => {
-    const mergedOptions = React.useMemo(
-      () => ({
-        ...defaultChartOptions,
-        ...options,
-      }),
-      [options],
-    )
+  ({ data, options, legendPosition = 'top', height = 300, className }, ref) => {
+    const mergedOptions = React.useMemo(() => {
+      const base = { ...defaultChartOptions, ...options }
+      base.plugins = {
+        ...base.plugins,
+        legend: {
+          ...base.plugins?.legend,
+          position: legendPosition,
+          align: legendPosition === 'bottom' || legendPosition === 'top' ? 'start' : 'center',
+        },
+      }
+      return base
+    }, [options, legendPosition])
 
     const chartData = React.useMemo(() => {
       const datasets = data.datasets?.map((ds, i) => ({
@@ -62,7 +73,8 @@ export const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
         tension: 0.3,
         borderColor: ds.borderColor ?? defaultChartColors[i % defaultChartColors.length],
         backgroundColor:
-          ds.backgroundColor ?? `${defaultChartColors[i % defaultChartColors.length]}40`,
+          ds.backgroundColor ??
+          addColorOpacityForFill(defaultChartColors[i % defaultChartColors.length] as string),
       }))
       return { ...data, datasets }
     }, [data])

@@ -1,4 +1,7 @@
 .mining-sdk-chart-container {
+  background-color: var(--mining-sdk-chart-container-bg);
+  padding: 20px;
+
   &--grid {
     display: grid;
     grid-template-columns: 1fr auto;
