@@ -49,10 +49,6 @@ export type ChartContainerProps = {
   empty?: boolean
   /** Message when empty */
   emptyMessage?: string
-  /** Toggle legend visibility */
-  showLegend?: boolean
-  /** Legend position */
-  legendPosition?: 'top' | 'bottom' | 'left' | 'right'
   /** Footer content (e.g. Min/Max/Avg stats) */
   footer?: React.ReactNode
   className?: string
@@ -108,11 +104,16 @@ export const ChartContainer = React.forwardRef<HTMLDivElement, ChartContainerPro
             </div>
             <div className="mining-sdk-chart-container__range-area">
               {rangeSelector && rangeSelector.options.length > 0 && (
-                <div className="mining-sdk-chart-container__range-selector" role="group">
+                <div
+                  className="mining-sdk-chart-container__range-selector"
+                  role="group"
+                  aria-label="Time range"
+                >
                   {rangeSelector.options.map((opt) => (
                     <button
                       key={opt.value}
                       type="button"
+                      aria-pressed={rangeSelector.value === opt.value}
                       className={cn(
                         'mining-sdk-chart-container__range-btn',
                         rangeSelector.value === opt.value &&
