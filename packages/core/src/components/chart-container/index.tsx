@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { cn } from '../../utils'
+import { Loader } from '../loader'
 
 function legendFillColor(color: string): string {
   if (color.startsWith('hsl')) {
@@ -218,14 +219,14 @@ export const ChartContainer = React.forwardRef<HTMLDivElement, ChartContainerPro
             </div>
             <div className="mining-sdk-chart-container__chart-area">
               {loading && (
-                <div className="mining-sdk-chart-container__loading">
-                  <span className="mining-sdk-chart-container__spinner" aria-hidden="true" />
+                <div className="mining-sdk-chart-container__loading-overlay">
+                  <Loader size={8} count={3} />
                 </div>
               )}
               {empty && !loading && (
                 <div className="mining-sdk-chart-container__empty">{emptyMessage}</div>
               )}
-              {!loading && !empty && chartChildren}
+              {!empty && chartChildren}
             </div>
           </>
         ) : (
@@ -240,14 +241,14 @@ export const ChartContainer = React.forwardRef<HTMLDivElement, ChartContainerPro
             )}
             <div className="mining-sdk-chart-container__body">
               {loading && (
-                <div className="mining-sdk-chart-container__loading">
-                  <span className="mining-sdk-chart-container__spinner" aria-hidden="true" />
+                <div className="mining-sdk-chart-container__loading-overlay">
+                  <Loader size={8} count={3} />
                 </div>
               )}
               {empty && !loading && (
                 <div className="mining-sdk-chart-container__empty">{emptyMessage}</div>
               )}
-              {!loading && !empty && chartChildren}
+              {!empty && chartChildren}
             </div>
           </>
         )}
