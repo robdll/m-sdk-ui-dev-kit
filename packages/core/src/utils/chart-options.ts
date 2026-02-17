@@ -67,6 +67,20 @@ const buildLegendLabels = (chart: Chart): LegendLabelItem[] => {
   })
 }
 
+/** Chart.js plugin that adds bottom margin below the legend */
+export const legendMarginPlugin = {
+  id: 'legendMargin',
+  beforeInit(chart: Chart) {
+    const legend = chart.legend
+    if (!legend) return
+    const originalFit = legend.fit.bind(legend)
+    legend.fit = function () {
+      originalFit()
+      this.height += 12
+    }
+  },
+}
+
 export const defaultChartOptions = {
   responsive: true,
   maintainAspectRatio: false,

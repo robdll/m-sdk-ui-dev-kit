@@ -13,7 +13,11 @@ import 'chartjs-adapter-date-fns'
 import * as React from 'react'
 import { Line } from 'react-chartjs-2'
 import { cn } from '../../utils'
-import { defaultChartColors, defaultChartOptions } from '../../utils/chart-options'
+import {
+  defaultChartColors,
+  defaultChartOptions,
+  legendMarginPlugin,
+} from '../../utils/chart-options'
 
 ChartJS.register(
   CategoryScale,
@@ -156,7 +160,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         className={cn('mining-sdk-line-chart', className)}
         style={{ height, width: '100%' }}
       >
-        <Line data={chartData} options={mergedOptions} />
+        <Line data={chartData} options={mergedOptions} plugins={[legendMarginPlugin]} />
       </div>
     )
   },
