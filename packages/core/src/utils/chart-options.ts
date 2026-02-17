@@ -44,23 +44,34 @@ type LegendLabelItem = {
 /** Build legend items from chart datasets (avoids Chart.defaults which may be uninitialized at module load) */
 const buildLegendLabels = (chart: Chart): LegendLabelItem[] => {
   const datasets = chart.data.datasets ?? []
-  const fontColor = 'rgba(255, 255, 255, 0.7)'
   return datasets.map((dataset, i) => {
     const meta = chart.getDatasetMeta(i)
+    const isHidden = meta.hidden === true
+    const disabledOpacity = 0.3
+
     const strokeStyleRaw = dataset.borderColor ?? dataset.backgroundColor ?? '#888'
     const strokeStyle = typeof strokeStyleRaw === 'string' ? strokeStyleRaw : '#888'
-    const fillStyle = addColorOpacity(strokeStyle, 0.25)
+
+    const fillStyle = isHidden
+      ? addColorOpacity(strokeStyle, 0.25 * disabledOpacity)
+      : addColorOpacity(strokeStyle, 0.25)
+
+    const dimmedStrokeStyle = isHidden ? addColorOpacity(strokeStyle, disabledOpacity) : strokeStyle
+    const fontColor = isHidden
+      ? `rgba(255, 255, 255, ${0.7 * disabledOpacity})`
+      : 'rgba(255, 255, 255, 0.7)'
+
     const ds = dataset as unknown as Record<string, unknown>
     return {
       text: (dataset.label as string) ?? '',
       fillStyle,
-      strokeStyle,
+      strokeStyle: dimmedStrokeStyle,
       lineWidth: (dataset.borderWidth as number) ?? 1,
       lineDash: (ds.borderDash as number[] | undefined) ?? [],
       lineDashOffset: (ds.borderDashOffset as number | undefined) ?? 0,
       lineCap: (ds.borderCapStyle as CanvasLineCap | undefined) ?? 'butt',
       lineJoin: (ds.borderJoinStyle as CanvasLineJoin | undefined) ?? 'miter',
-      hidden: meta.hidden,
+      hidden: false,
       datasetIndex: i,
       fontColor,
     }
