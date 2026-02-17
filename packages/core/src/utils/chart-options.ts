@@ -104,13 +104,15 @@ export const defaultChartOptions = {
   scales: {
     x: {
       display: true,
+      border: { display: false },
       grid: { display: false, color: '#4a4a4a' },
-      ticks: { color: '#4a4a4a', maxRotation: 0 },
+      ticks: { color: 'rgba(255, 255, 255, 0.7)', maxRotation: 0 },
     },
     y: {
       display: true,
+      border: { display: false },
       grid: { display: true, color: '#4a4a4a' },
-      ticks: { color: '#4a4a4a' },
+      ticks: { color: 'rgba(255, 255, 255, 0.7)' },
     },
   },
   elements: {
