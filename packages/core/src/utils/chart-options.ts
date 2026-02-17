@@ -103,6 +103,14 @@ export const defaultChartOptions = {
       display: true,
       position: 'top' as const,
       align: 'start' as const,
+      onHover: (_event: { native: MouseEvent }) => {
+        const canvas = _event.native?.target as HTMLCanvasElement | null
+        if (canvas) canvas.style.cursor = 'pointer'
+      },
+      onLeave: (_event: { native: MouseEvent }) => {
+        const canvas = _event.native?.target as HTMLCanvasElement | null
+        if (canvas) canvas.style.cursor = 'default'
+      },
       labels: {
         color: 'rgba(255, 255, 255, 0.7)',
         font: { size: 12 },
