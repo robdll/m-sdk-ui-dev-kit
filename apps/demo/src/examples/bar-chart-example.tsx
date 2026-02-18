@@ -5,6 +5,7 @@ import {
   BAR_CHART_MINERS_STATUS,
   BAR_CHART_MINING_OUTPUT,
   BAR_CHART_STACKED_REVENUE,
+  BAR_CHART_SUBSIDY_FEES,
 } from '../constants/demo-chart-data'
 
 export const BarChartExample: React.FC = () => {
@@ -40,6 +41,34 @@ export const BarChartExample: React.FC = () => {
             isStacked
             legendPosition="bottom"
             legendAlign="start"
+          />
+        </ChartContainer>
+      </section>
+
+      <section>
+        <h3>Bar + Line with Data Labels</h3>
+        <ChartContainer title="Subsidy/Fees">
+          <BarChart
+            height={250}
+            data={BAR_CHART_SUBSIDY_FEES}
+            isStacked
+            showDataLabels
+            legendPosition="bottom"
+            legendAlign="start"
+            formatDataLabel={(v) => v.toFixed(2)}
+            options={{
+              scales: {
+                y1: {
+                  position: 'right',
+                  beginAtZero: true,
+                  grid: { drawOnChartArea: false },
+                  ticks: {
+                    color: 'rgba(255,255,255,0.6)',
+                    callback: (v: string | number) => `${v}%`,
+                  },
+                },
+              },
+            }}
           />
         </ChartContainer>
       </section>

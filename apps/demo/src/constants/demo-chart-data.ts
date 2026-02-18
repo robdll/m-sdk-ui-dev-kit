@@ -109,6 +109,62 @@ export const BAR_CHART_GROUPED_SITES = {
   ],
 }
 
+export const BAR_CHART_SUBSIDY_FEES = {
+  labels: [
+    '02-02',
+    '02-03',
+    '02-04',
+    '02-05',
+    '02-06',
+    '02-07',
+    '02-08',
+    '02-09',
+    '02-10',
+    '02-11',
+    '02-12',
+    '02-13',
+    '02-14',
+    '02-15',
+    '02-16',
+    '02-17',
+    '02-18',
+  ],
+  datasets: [
+    {
+      label: 'Subsidy',
+      data: [
+        3.14, 3.15, 3.13, 3.16, 3.16, 3.14, 3.14, 3.13, 3.14, 3.15, 3.16, 3.13, 3.16, 3.13, 3.14,
+        3.14, 3.13,
+      ],
+      backgroundColor: COLOR.SLEEP_BLUE,
+      borderColor: COLOR.SLEEP_BLUE,
+      stack: 'btc',
+    },
+    {
+      label: 'Fees',
+      data: [
+        0.01, 0.02, 0.01, 0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.02, 0.01, 0.02, 0.01, 0.01,
+        0.01, 0.01,
+      ],
+      backgroundColor: COLOR.SLEEP_BLUE,
+      borderColor: COLOR.SLEEP_BLUE,
+      stack: 'btc',
+    },
+    {
+      type: 'line' as const,
+      label: 'Fee %',
+      data: [0.8, 1.5, 0.9, 2.3, 3.0, 0.3, 0.5, 1.0, 1.2, 1.6, 1.5, 2.5, 2.9, 0.5, 1.1, 0.8, 0.4],
+      borderColor: COLOR.RED,
+      backgroundColor: COLOR.RED,
+      yAxisID: 'y1',
+      tension: 0.4,
+      pointRadius: 3,
+      pointHoverRadius: 5,
+      fill: false,
+    },
+  ],
+}
+
 export const BAR_CHART_MINERS_STATUS = {
   labels: ['02-11', '02-12', '02-13', '02-14', '02-15', '02-16', '02-17'],
   datasets: [

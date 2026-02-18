@@ -9,6 +9,7 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 import 'chartjs-adapter-date-fns'
 import * as React from 'react'
 import { Bar } from 'react-chartjs-2'
@@ -32,8 +33,9 @@ ChartJS.register(
 )
 
 export type BarChartProps = {
-  /** Chart data - required, provided by parent */
-  data: ChartJS<'bar'>['data']
+  /** Chart data - required, provided by parent. Use `as any` for mixed bar+line datasets. */
+
+  data: any
   /** Chart.js options - merged with defaults */
   options?: ChartJS<'bar'>['options']
   /** Stack bars on top of each other */
@@ -48,6 +50,10 @@ export type BarChartProps = {
   legendPosition?: 'top' | 'bottom' | 'left' | 'right'
   /** Alignment of the legend labels within their position (default: 'start') */
   legendAlign?: 'start' | 'center' | 'end'
+  /** Show values above each bar */
+  showDataLabels?: boolean
+  /** Format data label values (default: round to nearest integer) */
+  formatDataLabel?: (value: number) => string
   /** Chart height in pixels */
   height?: number
   className?: string
@@ -64,6 +70,8 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       showLegend = true,
       legendPosition = 'top',
       legendAlign = 'start',
+      showDataLabels = false,
+      formatDataLabel,
       height = 300,
       className,
     },
@@ -87,6 +95,30 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
           position: legendPosition,
           align: legendAlign,
         },
+        datalabels: showDataLabels
+          ? {
+              display: (ctx: { dataset: { type?: string } }): boolean =>
+                ctx.dataset.type !== 'line',
+              anchor: 'end' as const,
+              align: 'end' as const,
+              offset: 2,
+              clamp: true,
+              clip: false,
+              color: 'rgba(255, 255, 255, 0.85)',
+              font: { size: 11, weight: 'bold' as const },
+              formatter: (v: number | null) => {
+                if (v == null) return ''
+                return formatDataLabel ? formatDataLabel(v) : Math.round(v)
+              },
+            }
+          : { display: false },
+      }
+
+      if (showDataLabels) {
+        const baseAny = base as Record<string, unknown>
+        const existingLayout =
+          typeof baseAny.layout === 'object' && baseAny.layout ? baseAny.layout : {}
+        baseAny.layout = { ...(existingLayout as Record<string, unknown>), padding: { top: 20 } }
       }
 
       const scales = { ...base.scales } as Record<string, Record<string, unknown>>
@@ -112,13 +144,34 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       }
 
       return { ...base, scales }
-    }, [options, isStacked, isHorizontal, formatYLabel, showLegend, legendPosition, legendAlign])
+    }, [
+      options,
+      isStacked,
+      isHorizontal,
+      formatYLabel,
+      showLegend,
+      legendPosition,
+      legendAlign,
+      showDataLabels,
+      formatDataLabel,
+    ])
 
     const chartData = React.useMemo(() => {
-      const datasets = data.datasets?.map((ds, i) => {
+      const datasets = data.datasets?.map((ds: any, i: number) => {
+        const dsType = ds.type as string | undefined
+        const isLine = dsType === 'line'
+
         const solidColor = String(
           ds.borderColor ?? ds.backgroundColor ?? defaultChartColors[i % defaultChartColors.length],
         )
+
+        if (isLine) {
+          return {
+            ...ds,
+            borderColor: ds.borderColor ?? solidColor,
+            backgroundColor: ds.backgroundColor ?? solidColor,
+          }
+        }
 
         const hasCustomBg = ds.backgroundColor != null && typeof ds.backgroundColor === 'function'
 
@@ -137,9 +190,14 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       return { ...data, datasets }
     }, [data])
 
+    const plugins = React.useMemo(
+      () => (showDataLabels ? [legendMarginPlugin, ChartDataLabels] : [legendMarginPlugin]),
+      [showDataLabels],
+    )
+
     return (
       <div ref={ref} className={cn('mining-sdk-bar-chart', className)} style={{ height }}>
-        <Bar data={chartData} options={mergedOptions} plugins={[legendMarginPlugin]} />
+        <Bar data={chartData} options={mergedOptions} plugins={plugins} />
       </div>
     )
   },
