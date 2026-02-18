@@ -97,15 +97,37 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         },
         datalabels: showDataLabels
           ? {
-              display: (ctx: { dataset: { type?: string } }): boolean =>
-                ctx.dataset.type !== 'line',
+              display: (ctx: {
+                chart: ChartJS
+                dataset: { type?: string; stack?: string }
+                datasetIndex: number
+                dataIndex: number
+              }): boolean => {
+                const { chart, dataset, datasetIndex, dataIndex } = ctx
+                if (dataset.type === 'line') return false
+                if (!isStacked) return true
+                const stackKey = dataset.stack || '__default__'
+                const dsets = chart.data.datasets ?? []
+                for (let i = dsets.length - 1; i >= 0; i--) {
+                  const ds = dsets[i] as
+                    | { type?: string; stack?: string; data?: unknown[] }
+                    | undefined
+                  if (!ds || ds.type === 'line') continue
+                  if ((ds.stack || '__default__') !== stackKey) continue
+                  if (!chart.isDatasetVisible(i)) continue
+                  const v = Array.isArray(ds.data) ? ds.data[dataIndex] : null
+                  if (v == null || v === 0) continue
+                  return i === datasetIndex
+                }
+                return true
+              },
               anchor: 'end' as const,
               align: 'end' as const,
               offset: 2,
               clamp: true,
               clip: false,
               color: 'rgba(255, 255, 255, 0.85)',
-              font: { size: 11, weight: 'bold' as const },
+              font: { size: 11, weight: 'normal' as const },
               formatter: (v: number | null) => {
                 if (v == null) return ''
                 return formatDataLabel ? formatDataLabel(v) : Math.round(v)
