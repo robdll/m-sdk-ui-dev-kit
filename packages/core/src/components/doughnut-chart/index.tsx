@@ -1,0 +1,202 @@
+import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js'
+import * as React from 'react'
+import { Doughnut } from 'react-chartjs-2'
+import { PIE_CHART_COLORS } from '../../constants/colors'
+import { cn } from '../../utils'
+
+ChartJS.register(ArcElement, Tooltip, Legend)
+
+export type DoughnutChartDataset = {
+  label: string
+  value: number
+  color?: string
+}
+
+export type DoughnutChartProps = {
+  /** Array of labelled slices */
+  data: DoughnutChartDataset[]
+  /** Header label displayed above the legend (e.g. "TOTAL MINERS") */
+  label?: string
+  /** Header value displayed next to the label (e.g. "271") */
+  value?: string | number
+  /** Unit suffix shown after value and in tooltips */
+  unit?: string
+  /** Chart.js options – merged with defaults */
+  options?: ChartJS<'doughnut'>['options']
+  /** Doughnut cutout percentage (default: '75%') */
+  cutout?: string
+  /** Border width between segments (default: 4) */
+  borderWidth?: number
+  /** Chart height in pixels */
+  height?: number
+  className?: string
+}
+
+const formatPct = (value: number, total: number): string => {
+  if (total === 0) return '0'
+  return ((value / total) * 100).toFixed(2)
+}
+
+/**
+ * DoughnutChart – Presentational Chart.js doughnut chart
+ * with built-in header card and custom HTML legend matching the miningOS design.
+ *
+ * @example
+ * ```tsx
+ * <DoughnutChart
+ *   data={[
+ *     { label: 'Online', value: 120, color: '#34C759' },
+ *     { label: 'Offline', value: 30, color: '#FF3B30' },
+ *   ]}
+ *   label="TOTAL MINERS"
+ *   value="150"
+ * />
+ * ```
+ */
+export const DoughnutChart = React.forwardRef<HTMLDivElement, DoughnutChartProps>(
+  (
+    {
+      data,
+      label,
+      value,
+      unit = '',
+      options,
+      cutout = '75%',
+      borderWidth = 4,
+      height = 260,
+      className,
+    },
+    ref,
+  ) => {
+    const chartRef = React.useRef<ChartJS<'doughnut'> | null>(null)
+    const [hiddenItems, setHiddenItems] = React.useState<Record<number, boolean>>({})
+
+    const dataKey = React.useMemo(() => data.map((d) => d.label).join('|'), [data])
+    React.useEffect(() => {
+      setHiddenItems({})
+    }, [dataKey])
+
+    const total = React.useMemo(() => data.reduce((acc, d) => acc + d.value, 0), [data])
+
+    const colors = React.useMemo(
+      () => data.map((d, i) => d.color ?? PIE_CHART_COLORS[i % PIE_CHART_COLORS.length]),
+      [data],
+    )
+
+    const chartData = React.useMemo(
+      () => ({
+        labels: data.map((d) => d.label),
+        datasets: [
+          {
+            data: data.map((d) => d.value),
+            backgroundColor: colors,
+            hoverBackgroundColor: colors,
+            cutout,
+            borderWidth,
+            borderColor: '#17130F',
+          },
+        ],
+      }),
+      [data, colors, cutout, borderWidth],
+    )
+
+    const mergedOptions = React.useMemo((): ChartJS<'doughnut'>['options'] => {
+      const base: ChartJS<'doughnut'>['options'] = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#17130F',
+            titleFont: { size: 10 },
+            bodyFont: { size: 12 },
+            callbacks: {
+              title: () => '',
+              label: (ctx) => {
+                const v = ctx.parsed ?? 0
+                const pct = formatPct(v, total)
+                const suffix = unit ? ` ${unit}` : ''
+                return [`${ctx.label}`, `${v}${suffix} (${pct}%)`]
+              },
+            },
+          },
+          datalabels: { display: false },
+        },
+        elements: { arc: { borderWidth: 0 } },
+      }
+
+      if (options) {
+        return { ...base, ...options }
+      }
+      return base
+    }, [total, unit, options])
+
+    const onToggleItem = React.useCallback((index: number) => {
+      const chart = chartRef.current
+      if (!chart) return
+      chart.toggleDataVisibility(index)
+      chart.update()
+      setHiddenItems((prev) => ({
+        ...prev,
+        [index]: !chart.getDataVisibility(index),
+      }))
+    }, [])
+
+    const showHeader = label != null || value != null
+
+    return (
+      <div ref={ref} className={cn('mining-sdk-doughnut-chart', className)}>
+        {/* Header card */}
+        {showHeader && (
+          <div className="mining-sdk-doughnut-chart__header">
+            {label && <span className="mining-sdk-doughnut-chart__label">{label}</span>}
+            {value != null && (
+              <span className="mining-sdk-doughnut-chart__value">
+                {value}
+                {unit ? ` ${unit}` : ''}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Custom legend */}
+        <div className="mining-sdk-doughnut-chart__legend">
+          {data.map((item, i) => {
+            const isHidden = !!hiddenItems[i]
+            const pct = formatPct(item.value, total)
+            return (
+              <button
+                key={`${item.label}-${i}`}
+                type="button"
+                className={cn(
+                  'mining-sdk-doughnut-chart__legend-item',
+                  isHidden && 'mining-sdk-doughnut-chart__legend-item--hidden',
+                )}
+                onClick={() => onToggleItem(i)}
+              >
+                <span
+                  className="mining-sdk-doughnut-chart__legend-color"
+                  style={{ backgroundColor: colors[i] }}
+                />
+                <span className="mining-sdk-doughnut-chart__legend-label">{item.label}</span>
+                <span className="mining-sdk-doughnut-chart__legend-stats">
+                  <span className="mining-sdk-doughnut-chart__legend-pct">({pct}%)</span>
+                  <span className="mining-sdk-doughnut-chart__legend-count">
+                    {item.value}
+                    {unit ? ` ${unit}` : ''}
+                  </span>
+                </span>
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Chart */}
+        <div className="mining-sdk-doughnut-chart__chart" style={{ height }}>
+          <Doughnut ref={chartRef} data={chartData} options={mergedOptions} />
+        </div>
+      </div>
+    )
+  },
+)
+DoughnutChart.displayName = 'DoughnutChart'

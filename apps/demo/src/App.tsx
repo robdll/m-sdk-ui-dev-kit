@@ -91,6 +91,7 @@ import { DemoTable } from './examples/demo-table'
 import FormExample from './examples/form-example'
 import { IndicatorsExample } from './examples/indicators-example'
 import { LineChartExample } from './examples/line-chart-example'
+import { PieChartExample } from './examples/pie-chart-example'
 import { ListViewFilterExample } from './examples/list-view-filter-example'
 import PaginationExample from './examples/pagination-example'
 import { RadioExample } from './examples/radio-example'
@@ -176,6 +177,7 @@ const COMPONENT_NAV: SidebarMenuItem[] = [
       { id: 'line-chart', label: 'Line Chart' },
       { id: 'bar-chart', label: 'Bar Chart' },
       { id: 'area-chart', label: 'Area Chart' },
+      { id: 'doughnut-chart', label: 'Doughnut Chart' },
       { id: 'gauge-chart', label: 'Gauge Chart' },
       { id: 'chart-container', label: 'ChartContainer' },
     ],
@@ -806,6 +808,16 @@ const App = (): JSX.Element => {
             <section className="demo-section">
               <h2 className="demo-section__title">Area Chart</h2>
               <AreaChartExample />
+            </section>
+          )}
+          {/* Charts - Doughnut Chart */}
+          {activeSection === 'doughnut-chart' && (
+            <section className="demo-section">
+              <h2 className="demo-section__title">Doughnut Chart</h2>
+              <p className="demo-section__description">
+                Doughnut chart with header card, custom legend, and toggleable slices.
+              </p>
+              <PieChartExample />
             </section>
           )}
           {/* Charts - Gauge Chart */}

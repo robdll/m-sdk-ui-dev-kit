@@ -1,0 +1,103 @@
+.mining-sdk-doughnut-chart {
+  @include flex_column;
+
+  gap: 24px;
+  width: 100%;
+
+  // ── Header card ───────────────────────────────────────────────────────────
+  &__header {
+    @include flex_align_between;
+
+    gap: 20px;
+    padding: 16px 20px;
+    background-color: hsl(0 0% 0% / 0.5);
+  }
+
+  &__label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    line-height: 1rem;
+    letter-spacing: 1.32px;
+    text-transform: uppercase;
+    color: hsl(var(--foreground) / 0.5);
+  }
+
+  &__value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: normal;
+    color: var(--mining-sdk-color-primary, #f7931a);
+  }
+
+  // ── Legend ─────────────────────────────────────────────────────────────────
+  &__legend {
+    @include flex_column;
+
+    gap: 4px;
+    width: 100%;
+  }
+
+  &__legend-item {
+    @include flex_align;
+
+    gap: 12px;
+    width: 100%;
+    padding: 6px 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &--hidden {
+      opacity: 0.3;
+    }
+  }
+
+  &__legend-color {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+
+  &__legend-label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: hsl(var(--foreground) / 0.85);
+    white-space: nowrap;
+    text-align: left;
+  }
+
+  &__legend-stats {
+    @include flex_align;
+
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  &__legend-pct {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: hsl(var(--foreground) / 0.6);
+    white-space: nowrap;
+  }
+
+  &__legend-count {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: hsl(var(--foreground) / 0.9);
+    white-space: nowrap;
+  }
+
+  // ── Chart ─────────────────────────────────────────────────────────────────
+  &__chart {
+    @include flex_center;
+
+    width: 100%;
+    max-width: 260px;
+    align-self: center;
+  }
+}
