@@ -8,7 +8,7 @@ import {
 
 export const PieChartExample: React.FC = () => {
   return (
-    <div className="demo-section__charts">
+    <div className="demo-section__charts demo-section__charts--2-col">
       <section>
         <h3>Miner Types</h3>
         <DoughnutChart data={DOUGHNUT_CHART_MINER_TYPES} />
@@ -22,6 +22,25 @@ export const PieChartExample: React.FC = () => {
       <section>
         <h3>Site Distribution (auto colors)</h3>
         <DoughnutChart data={DOUGHNUT_CHART_SITE_DISTRIBUTION} />
+      </section>
+
+      <section>
+        <h3>Legend Right</h3>
+        <DoughnutChart data={DOUGHNUT_CHART_MINER_STATUS} legendPosition="right" />
+      </section>
+
+      <section>
+        <h3>Legend Left</h3>
+        <DoughnutChart data={DOUGHNUT_CHART_MINER_TYPES} legendPosition="left" />
+      </section>
+
+      <section>
+        <h3>Legend Bottom</h3>
+        <DoughnutChart
+          data={DOUGHNUT_CHART_SITE_DISTRIBUTION}
+          legendPosition="bottom"
+          height={180}
+        />
       </section>
     </div>
   )

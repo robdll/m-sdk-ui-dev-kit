@@ -13,6 +13,8 @@ export type DoughnutChartDataset = {
   color?: string
 }
 
+export type DoughnutLegendPosition = 'top' | 'bottom' | 'left' | 'right'
+
 export type DoughnutChartProps = {
   /** Array of labelled slices */
   data: DoughnutChartDataset[]
@@ -26,6 +28,8 @@ export type DoughnutChartProps = {
   borderWidth?: number
   /** Chart height in pixels */
   height?: number
+  /** Where to place the legend relative to the chart (default: 'top') */
+  legendPosition?: DoughnutLegendPosition
   className?: string
 }
 
@@ -49,7 +53,19 @@ const formatPct = (value: number, total: number): string => {
  * ```
  */
 export const DoughnutChart = React.forwardRef<HTMLDivElement, DoughnutChartProps>(
-  ({ data, unit = '', options, cutout = '75%', borderWidth = 4, height = 260, className }, ref) => {
+  (
+    {
+      data,
+      unit = '',
+      options,
+      cutout = '75%',
+      borderWidth = 4,
+      height = 260,
+      legendPosition = 'top',
+      className,
+    },
+    ref,
+  ) => {
     const chartRef = React.useRef<ChartJS<'doughnut'> | null>(null)
     const [hiddenItems, setHiddenItems] = React.useState<Record<number, boolean>>({})
 
@@ -124,47 +140,61 @@ export const DoughnutChart = React.forwardRef<HTMLDivElement, DoughnutChartProps
       }))
     }, [])
 
-    return (
-      <div ref={ref} className={cn('mining-sdk-doughnut-chart', className)}>
-        {/* Custom legend */}
-        <div className="mining-sdk-doughnut-chart__legend">
-          {data.map((item, i) => {
-            const isHidden = !!hiddenItems[i]
-            const pct = formatPct(item.value, total)
-            return (
-              <button
-                key={`${item.label}-${i}`}
-                type="button"
-                className={cn(
-                  'mining-sdk-doughnut-chart__legend-item',
-                  isHidden && 'mining-sdk-doughnut-chart__legend-item--hidden',
-                )}
-                onClick={() => onToggleItem(i)}
-              >
-                <span
-                  className="mining-sdk-doughnut-chart__legend-color"
-                  style={{
-                    borderColor: colors[i],
-                    backgroundColor: colorWithAlpha(colors[i] ?? '#888', 0.2),
-                  }}
-                />
-                <span className="mining-sdk-doughnut-chart__legend-label">{item.label}</span>
-                <span className="mining-sdk-doughnut-chart__legend-stats">
-                  <span className="mining-sdk-doughnut-chart__legend-pct">({pct}%)</span>
-                  <span className="mining-sdk-doughnut-chart__legend-count">
-                    {item.value}
-                    {unit ? ` ${unit}` : ''}
-                  </span>
+    const legendEl = (
+      <div className="mining-sdk-doughnut-chart__legend">
+        {data.map((item, i) => {
+          const isHidden = !!hiddenItems[i]
+          const pct = formatPct(item.value, total)
+          return (
+            <button
+              key={`${item.label}-${i}`}
+              type="button"
+              className={cn(
+                'mining-sdk-doughnut-chart__legend-item',
+                isHidden && 'mining-sdk-doughnut-chart__legend-item--hidden',
+              )}
+              onClick={() => onToggleItem(i)}
+            >
+              <span
+                className="mining-sdk-doughnut-chart__legend-color"
+                style={{
+                  borderColor: colors[i],
+                  backgroundColor: colorWithAlpha(colors[i] ?? '#888', 0.2),
+                }}
+              />
+              <span className="mining-sdk-doughnut-chart__legend-label">{item.label}</span>
+              <span className="mining-sdk-doughnut-chart__legend-stats">
+                <span className="mining-sdk-doughnut-chart__legend-pct">({pct}%)</span>
+                <span className="mining-sdk-doughnut-chart__legend-count">
+                  {item.value}
+                  {unit ? ` ${unit}` : ''}
                 </span>
-              </button>
-            )
-          })}
-        </div>
+              </span>
+            </button>
+          )
+        })}
+      </div>
+    )
 
-        {/* Chart */}
-        <div className="mining-sdk-doughnut-chart__chart" style={{ height }}>
-          <Doughnut ref={chartRef} data={chartData} options={mergedOptions} />
-        </div>
+    const chartEl = (
+      <div className="mining-sdk-doughnut-chart__chart" style={{ height, maxWidth: height }}>
+        <Doughnut ref={chartRef} data={chartData} options={mergedOptions} />
+      </div>
+    )
+
+    const legendFirst = legendPosition === 'top' || legendPosition === 'left'
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'mining-sdk-doughnut-chart',
+          `mining-sdk-doughnut-chart--legend-${legendPosition}`,
+          className,
+        )}
+      >
+        {legendFirst ? legendEl : chartEl}
+        {legendFirst ? chartEl : legendEl}
       </div>
     )
   },
