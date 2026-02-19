@@ -19,6 +19,8 @@ import {
   defaultChartOptions,
   legendMarginPlugin,
 } from '../../utils/chart-options'
+import { buildChartTooltip } from '../../utils/chart-tooltip'
+import type { ChartTooltipConfig } from '../../utils/chart-tooltip'
 
 ChartJS.register(
   CategoryScale,
@@ -36,6 +38,8 @@ export type AreaChartProps = {
   data: ChartJS<'line'>['data']
   /** Chart.js options - merged with defaults */
   options?: ChartJS<'line'>['options']
+  /** Custom HTML tooltip configuration. When provided, replaces the default Chart.js tooltip. */
+  tooltip?: ChartTooltipConfig
   /** Chart height in pixels */
   height?: number
   className?: string
@@ -51,14 +55,20 @@ export type AreaChartProps = {
  * ```
  */
 export const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
-  ({ data, options, height = 300, className }, ref) => {
-    const mergedOptions = React.useMemo(
-      () => ({
+  ({ data, options, tooltip: tooltipConfig, height = 300, className }, ref) => {
+    const mergedOptions = React.useMemo(() => {
+      const base = {
         ...defaultChartOptions,
         ...options,
-      }),
-      [options],
-    )
+      }
+      if (tooltipConfig) {
+        base.plugins = {
+          ...base.plugins,
+          tooltip: buildChartTooltip(tooltipConfig) as any,
+        }
+      }
+      return base
+    }, [options, tooltipConfig])
 
     const chartData = React.useMemo(() => {
       const datasets = data.datasets?.map((ds, i) => {

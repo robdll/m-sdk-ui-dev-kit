@@ -1,4 +1,5 @@
 import { DoughnutChart } from '@mining-sdk/core'
+import type { ChartTooltipConfig } from '@mining-sdk/core'
 import React from 'react'
 import {
   DOUGHNUT_CHART_MINER_STATUS,
@@ -6,32 +7,46 @@ import {
   DOUGHNUT_CHART_SITE_DISTRIBUTION,
 } from '../constants/demo-chart-data'
 
+const doughnutTooltip: ChartTooltipConfig = {
+  valueFormatter: (v) => `${v} units`,
+  mode: 'nearest',
+  intersect: true,
+}
+
 export const DoughnutChartExample: React.FC = () => {
   return (
     <div className="demo-section__charts demo-section__charts--2-col">
       <section>
         <h3>Miner Types</h3>
-        <DoughnutChart data={DOUGHNUT_CHART_MINER_TYPES} />
+        <DoughnutChart data={DOUGHNUT_CHART_MINER_TYPES} tooltip={doughnutTooltip} />
       </section>
 
       <section>
         <h3>Miner Status</h3>
-        <DoughnutChart data={DOUGHNUT_CHART_MINER_STATUS} />
+        <DoughnutChart data={DOUGHNUT_CHART_MINER_STATUS} tooltip={doughnutTooltip} />
       </section>
 
       <section>
         <h3>Site Distribution (auto colors)</h3>
-        <DoughnutChart data={DOUGHNUT_CHART_SITE_DISTRIBUTION} />
+        <DoughnutChart data={DOUGHNUT_CHART_SITE_DISTRIBUTION} tooltip={doughnutTooltip} />
       </section>
 
       <section>
         <h3>Legend Right</h3>
-        <DoughnutChart data={DOUGHNUT_CHART_MINER_STATUS} legendPosition="right" />
+        <DoughnutChart
+          data={DOUGHNUT_CHART_MINER_STATUS}
+          legendPosition="right"
+          tooltip={doughnutTooltip}
+        />
       </section>
 
       <section>
         <h3>Legend Left</h3>
-        <DoughnutChart data={DOUGHNUT_CHART_MINER_TYPES} legendPosition="left" />
+        <DoughnutChart
+          data={DOUGHNUT_CHART_MINER_TYPES}
+          legendPosition="left"
+          tooltip={doughnutTooltip}
+        />
       </section>
 
       <section>
@@ -40,6 +55,7 @@ export const DoughnutChartExample: React.FC = () => {
           data={DOUGHNUT_CHART_SITE_DISTRIBUTION}
           legendPosition="bottom"
           height={180}
+          tooltip={doughnutTooltip}
         />
       </section>
     </div>

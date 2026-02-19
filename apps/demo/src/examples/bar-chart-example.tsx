@@ -1,4 +1,5 @@
 import { BarChart, ChartContainer } from '@mining-sdk/core'
+import type { ChartTooltipConfig } from '@mining-sdk/core'
 import React from 'react'
 import {
   BAR_CHART_GROUPED_SITES,
@@ -9,27 +10,31 @@ import {
   BAR_CHART_SUBSIDY_FEES,
 } from '../constants/demo-chart-data'
 
+const barTooltip: ChartTooltipConfig = {
+  valueFormatter: (v) => v.toLocaleString(),
+}
+
 export const BarChartExample: React.FC = () => {
   return (
     <div className="demo-section__charts">
       <section>
         <h3>Bar Chart</h3>
         <ChartContainer title="Mining output">
-          <BarChart height={250} data={BAR_CHART_MINING_OUTPUT} />
+          <BarChart height={250} data={BAR_CHART_MINING_OUTPUT} tooltip={barTooltip} />
         </ChartContainer>
       </section>
 
       <section>
         <h3>Stacked Bar Chart</h3>
         <ChartContainer title="Revenue by site (stacked)">
-          <BarChart height={250} data={BAR_CHART_STACKED_REVENUE} isStacked />
+          <BarChart height={250} data={BAR_CHART_STACKED_REVENUE} isStacked tooltip={barTooltip} />
         </ChartContainer>
       </section>
 
       <section>
         <h3>Grouped Bar Chart</h3>
         <ChartContainer title="Hash rate by site (grouped)">
-          <BarChart height={250} data={BAR_CHART_GROUPED_SITES} />
+          <BarChart height={250} data={BAR_CHART_GROUPED_SITES} tooltip={barTooltip} />
         </ChartContainer>
       </section>
 
@@ -41,6 +46,7 @@ export const BarChartExample: React.FC = () => {
             data={BAR_CHART_HORIZONTAL_MINERS}
             isHorizontal
             showLegend={false}
+            tooltip={barTooltip}
           />
         </ChartContainer>
       </section>
@@ -54,6 +60,7 @@ export const BarChartExample: React.FC = () => {
             isStacked
             legendPosition="bottom"
             legendAlign="start"
+            tooltip={barTooltip}
           />
         </ChartContainer>
       </section>
@@ -69,6 +76,7 @@ export const BarChartExample: React.FC = () => {
             legendPosition="bottom"
             legendAlign="start"
             formatDataLabel={(v) => v.toFixed(2)}
+            tooltip={{ valueFormatter: (v) => v.toFixed(2) }}
             options={{
               scales: {
                 y1: {

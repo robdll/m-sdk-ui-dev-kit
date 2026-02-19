@@ -18,6 +18,9 @@ export * from './chart'
 // Chart utilities
 export * from './chart-options'
 
+// Chart tooltip (external HTML tooltip for Chart.js)
+export * from './chart-tooltip'
+
 // Class name merging
 export * from './cn'
 

@@ -18,6 +18,8 @@ import {
   defaultChartOptions,
   legendMarginPlugin,
 } from '../../utils/chart-options'
+import { buildChartTooltip } from '../../utils/chart-tooltip'
+import type { ChartTooltipConfig } from '../../utils/chart-tooltip'
 
 ChartJS.register(
   CategoryScale,
@@ -47,6 +49,8 @@ export type LineChartProps = {
   hiddenDatasets?: Set<number>
   /** Enable zoom (wheel/pinch) and pan (default: true) */
   enableZoom?: boolean
+  /** Custom HTML tooltip configuration. When provided, replaces the default Chart.js tooltip. */
+  tooltip?: ChartTooltipConfig
   /** Chart height in pixels */
   height?: number
   className?: string
@@ -72,6 +76,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       showLegend = true,
       hiddenDatasets,
       enableZoom = true,
+      tooltip: tooltipConfig,
       height = 300,
       className,
     },
@@ -81,6 +86,12 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       const base = {
         ...defaultChartOptions,
         ...options,
+      }
+      if (tooltipConfig) {
+        base.plugins = {
+          ...base.plugins,
+          tooltip: buildChartTooltip(tooltipConfig) as any,
+        }
       }
       if (!showLegend) {
         base.plugins = {
@@ -143,7 +154,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
           },
         },
       }
-    }, [options, formatXLabel, formatYLabel, showPoints, showLegend, enableZoom])
+    }, [options, formatXLabel, formatYLabel, showPoints, showLegend, enableZoom, tooltipConfig])
 
     const chartData = React.useMemo(() => {
       const datasets = data.datasets?.map((ds, i) => ({

@@ -5,6 +5,8 @@
 import type { Chart, ChartEvent, Plugin } from 'chart.js'
 import { defaultChartColors } from '../constants/charts'
 import { CHART_COLORS } from '../constants/colors'
+import { buildChartTooltip } from './chart-tooltip'
+import type { ChartTooltipConfig } from './chart-tooltip'
 
 export { defaultChartColors }
 
@@ -314,6 +316,8 @@ export type BuildBarChartOptionsInput = {
   legendPosition?: 'top' | 'bottom' | 'left' | 'right'
   legendAlign?: 'start' | 'center' | 'end'
   showLegend?: boolean
+  /** Custom HTML tooltip configuration. When provided, replaces the default Chart.js tooltip. */
+  tooltip?: ChartTooltipConfig
 }
 
 /**
@@ -329,6 +333,7 @@ export const buildBarChartOptions = ({
   legendPosition = 'top',
   legendAlign = 'end',
   showLegend = true,
+  tooltip: tooltipConfig,
 }: BuildBarChartOptionsInput = {}): Record<string, unknown> => {
   const axisTicks = { color: CHART_COLORS.axisTicks }
   const gridColor = CHART_COLORS.gridLine
@@ -380,31 +385,33 @@ export const buildBarChartOptions = ({
           color: CHART_COLORS.legendLabel,
         },
       },
-      tooltip: {
-        displayColors,
-        mode: 'index',
-        intersect: false,
-        callbacks: {
-          label: (ctx: {
-            dataset: {
-              label?: string
-              yAxisID?: string
-            }
-            parsed: {
-              y: number
-              x: number
-            }
-          }) => {
-            const label = ctx.dataset.label || ''
-            const value = ctx.parsed.y ?? ctx.parsed.x
-            if (value == null) return `${label}: `
-            if (ctx.dataset.yAxisID === 'y1' && yRightTicksFormatter) {
-              return `${label}: ${yRightTicksFormatter(value)}`
-            }
-            return `${label}: ${yTicksFormatter(value)}`
+      tooltip: tooltipConfig
+        ? buildChartTooltip(tooltipConfig)
+        : {
+            displayColors,
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+              label: (ctx: {
+                dataset: {
+                  label?: string
+                  yAxisID?: string
+                }
+                parsed: {
+                  y: number
+                  x: number
+                }
+              }) => {
+                const label = ctx.dataset.label || ''
+                const value = ctx.parsed.y ?? ctx.parsed.x
+                if (value == null) return `${label}: `
+                if (ctx.dataset.yAxisID === 'y1' && yRightTicksFormatter) {
+                  return `${label}: ${yRightTicksFormatter(value)}`
+                }
+                return `${label}: ${yTicksFormatter(value)}`
+              },
+            },
           },
-        },
-      },
     },
     elements: { bar: { borderWidth: 1 } },
     scales,

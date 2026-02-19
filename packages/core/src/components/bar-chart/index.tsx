@@ -20,6 +20,8 @@ import {
   legendMarginPlugin,
   makeBarGradient,
 } from '../../utils/chart-options'
+import { buildChartTooltip } from '../../utils/chart-tooltip'
+import type { ChartTooltipConfig } from '../../utils/chart-tooltip'
 
 ChartJS.register(
   CategoryScale,
@@ -72,6 +74,8 @@ export type BarChartProps = {
   showDataLabels?: boolean
   /** Format data label values (default: round to nearest integer) */
   formatDataLabel?: (value: number) => string
+  /** Custom HTML tooltip configuration. When provided, replaces the default Chart.js tooltip. */
+  tooltip?: ChartTooltipConfig
   /** Chart height in pixels */
   height?: number
   className?: string
@@ -88,6 +92,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       showLegend = true,
       legendPosition = 'top',
       legendAlign = 'start',
+      tooltip: tooltipConfig,
       showDataLabels = false,
       formatDataLabel,
       height = 300,
@@ -99,6 +104,13 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       const base = {
         ...defaultChartOptions,
         ...options,
+      }
+
+      if (tooltipConfig) {
+        base.plugins = {
+          ...base.plugins,
+          tooltip: buildChartTooltip(tooltipConfig) as any,
+        }
       }
 
       if (isHorizontal) {
@@ -187,6 +199,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       legendAlign,
       showDataLabels,
       formatDataLabel,
+      tooltipConfig,
     ])
 
     const chartData = React.useMemo(() => {
