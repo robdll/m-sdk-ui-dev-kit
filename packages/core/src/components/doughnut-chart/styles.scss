@@ -60,6 +60,10 @@
     color: hsl(210 40% 98% / 0.85);
     white-space: nowrap;
     text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex: 1;
   }
 
   &__legend-stats {

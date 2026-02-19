@@ -6,7 +6,7 @@ import {
   DOUGHNUT_CHART_SITE_DISTRIBUTION,
 } from '../constants/demo-chart-data'
 
-export const PieChartExample: React.FC = () => {
+export const DoughnutChartExample: React.FC = () => {
   return (
     <div className="demo-section__charts demo-section__charts--2-col">
       <section>
