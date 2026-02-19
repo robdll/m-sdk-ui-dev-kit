@@ -90,7 +90,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       if (tooltipConfig) {
         base.plugins = {
           ...base.plugins,
-          tooltip: buildChartTooltip(tooltipConfig) as any,
+          tooltip: buildChartTooltip(tooltipConfig),
         }
       }
       if (!showLegend) {

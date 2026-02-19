@@ -109,7 +109,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       if (tooltipConfig) {
         base.plugins = {
           ...base.plugins,
-          tooltip: buildChartTooltip(tooltipConfig) as any,
+          tooltip: buildChartTooltip(tooltipConfig),
         }
       }
 

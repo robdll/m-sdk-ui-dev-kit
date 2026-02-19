@@ -33,7 +33,11 @@ export type DoughnutChartProps = {
   height?: number
   /** Where to place the legend relative to the chart (default: 'top') */
   legendPosition?: DoughnutLegendPosition
-  /** Custom HTML tooltip configuration. When provided, replaces the default Chart.js tooltip. */
+  /**
+   * Custom HTML tooltip configuration. When provided, replaces the default doughnut tooltip
+   *  (which shows label, value with unit, and percentage). Use `valueFormatter` to replicate
+   *  the percentage display if needed.
+   */
   tooltip?: ChartTooltipConfig
   className?: string
 }
@@ -127,7 +131,7 @@ export const DoughnutChart = React.forwardRef<HTMLDivElement, DoughnutChartProps
         maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
-          tooltip: tooltipPlugin as any,
+          tooltip: tooltipPlugin,
           datalabels: { display: false },
         },
         elements: { arc: { borderWidth: 0 } },

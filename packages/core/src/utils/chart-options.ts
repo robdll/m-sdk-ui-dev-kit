@@ -316,7 +316,11 @@ export type BuildBarChartOptionsInput = {
   legendPosition?: 'top' | 'bottom' | 'left' | 'right'
   legendAlign?: 'start' | 'center' | 'end'
   showLegend?: boolean
-  /** Custom HTML tooltip configuration. When provided, replaces the default Chart.js tooltip. */
+  /**
+   * Custom HTML tooltip configuration. When provided, replaces the default Chart.js tooltip.
+   *  Only used when calling `buildBarChartOptions` directly — the `BarChart` component
+   *  applies its own `tooltip` prop separately via `buildChartTooltip`.
+   */
   tooltip?: ChartTooltipConfig
 }
 

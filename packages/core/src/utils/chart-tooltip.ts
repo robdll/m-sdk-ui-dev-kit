@@ -1,4 +1,4 @@
-import type { Chart, TooltipItem, TooltipModel } from 'chart.js'
+import type { Chart, ChartType, TooltipItem, TooltipModel, TooltipOptions } from 'chart.js'
 import { COLOR } from '../constants/colors'
 
 export type ChartTooltipConfig = {
@@ -22,13 +22,13 @@ export type ChartTooltipConfig = {
   intersect?: boolean
 }
 
-const TOOLTIP_CONTAINER_ID = 'mining-sdk-chart-tooltip'
+const TOOLTIP_ATTR = 'data-msdk-chart-tooltip'
 const TRACKING_ATTR = 'data-msdk-mouse'
 const GAP = 10
 const OFFSET = 5
 
 const positionTooltip = (container: HTMLElement, cursorX: number, cursorY: number): void => {
-  const tooltipEl = container.querySelector<HTMLDivElement>(`#${TOOLTIP_CONTAINER_ID}`)
+  const tooltipEl = container.querySelector<HTMLDivElement>(`[${TOOLTIP_ATTR}]`)
   if (!tooltipEl || tooltipEl.style.opacity === '0') return
 
   const tooltipWidth = tooltipEl.offsetWidth
@@ -50,6 +50,9 @@ const positionTooltip = (container: HTMLElement, cursorX: number, cursorY: numbe
   tooltipEl.style.top = `${top}px`
 }
 
+// Listeners are intentionally not cleaned up — they're bound to the container element,
+// which React owns. When the container is removed from the DOM, the element and its
+// listeners are garbage-collected together. The data-attribute guard prevents double-binding.
 const ensureMouseTracking = (container: HTMLElement): void => {
   if (container.getAttribute(TRACKING_ATTR)) return
   container.setAttribute(TRACKING_ATTR, '1')
@@ -60,7 +63,7 @@ const ensureMouseTracking = (container: HTMLElement): void => {
   })
 
   container.addEventListener('mouseleave', () => {
-    const tooltipEl = container.querySelector<HTMLDivElement>(`#${TOOLTIP_CONTAINER_ID}`)
+    const tooltipEl = container.querySelector<HTMLDivElement>(`[${TOOLTIP_ATTR}]`)
     if (tooltipEl) tooltipEl.style.opacity = '0'
   })
 }
@@ -70,11 +73,11 @@ const getOrCreateTooltipEl = (chart: Chart): HTMLDivElement => {
   const container = canvas.parentElement
   if (!container) throw new Error('Chart canvas must have a parent element')
 
-  let tooltipEl = container.querySelector<HTMLDivElement>(`#${TOOLTIP_CONTAINER_ID}`)
+  let tooltipEl = container.querySelector<HTMLDivElement>(`[${TOOLTIP_ATTR}]`)
 
   if (!tooltipEl) {
     tooltipEl = document.createElement('div')
-    tooltipEl.id = TOOLTIP_CONTAINER_ID
+    tooltipEl.setAttribute(TOOLTIP_ATTR, '')
     tooltipEl.style.position = 'absolute'
     tooltipEl.style.pointerEvents = 'none'
     tooltipEl.style.transition = 'opacity 0.15s ease'
@@ -116,12 +119,7 @@ const resolveDatasetColor = (item: TooltipItem<any>): string => {
  */
 export const buildChartTooltip = (
   config: ChartTooltipConfig = {},
-): {
-  enabled: boolean
-  external: (context: { chart: Chart; tooltip: TooltipModel<any> }) => void
-  mode: string
-  intersect: boolean
-} => {
+): Partial<TooltipOptions<ChartType>> => {
   const {
     labelColor = COLOR.LIGHT_GREY,
     valueColor = 'dataset',

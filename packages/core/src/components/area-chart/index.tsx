@@ -64,7 +64,7 @@ export const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       if (tooltipConfig) {
         base.plugins = {
           ...base.plugins,
-          tooltip: buildChartTooltip(tooltipConfig) as any,
+          tooltip: buildChartTooltip(tooltipConfig),
         }
       }
       return base

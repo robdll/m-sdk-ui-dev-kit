@@ -41,6 +41,10 @@ const generateHashRateData = (range: string): typeof LINE_CHART_HASH_RATE => {
   }
 }
 
+const hashRateTooltip: ChartTooltipConfig = {
+  valueFormatter: (v) => `${v.toFixed(2)} PH/s`,
+}
+
 export const LineChartExample: React.FC = () => {
   const [range, setRange] = useState('5m')
   const [hashRateData, setHashRateData] = useState(() => generateHashRateData('5m'))
@@ -68,10 +72,6 @@ export const LineChartExample: React.FC = () => {
 
   const dailyRevenueData = (LINE_CHART_DAILY_REVENUE.datasets[0]?.data ?? []) as number[]
   const dailyRevenueStats = computeStats(dailyRevenueData)
-
-  const hashRateTooltip: ChartTooltipConfig = {
-    valueFormatter: (v) => `${v.toFixed(2)} PH/s`,
-  }
 
   return (
     <div className="demo-section__charts demo-section__charts--2-col">
