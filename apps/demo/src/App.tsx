@@ -73,6 +73,7 @@ const COMPONENT_NAV: SidebarMenuItem[] = [
       { id: 'line-chart', label: 'Line Chart' },
       { id: 'bar-chart', label: 'Bar Chart' },
       { id: 'area-chart', label: 'Area Chart' },
+      { id: 'doughnut-chart', label: 'Doughnut Chart' },
       { id: 'gauge-chart', label: 'Gauge Chart' },
       { id: 'chart-container', label: 'ChartContainer' },
       { id: 'chart-wrapper', label: 'Chart wrapper' },

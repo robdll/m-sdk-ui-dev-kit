@@ -98,6 +98,9 @@ const AreaChartExample = lazy(() =>
     default: module.AreaChartExample,
   })),
 )
+const DoughnutChartPage = lazy(() =>
+  import('./pages/doughnut-chart-page').then((module) => ({ default: module.DoughnutChartPage })),
+)
 const AccordionExample = lazy(() =>
   import('./examples/accordion-example').then((module) => ({ default: module.AccordionExample })),
 )
@@ -184,6 +187,7 @@ export const router = createBrowserRouter([
       { path: 'line-chart', element: withSuspense(LineChartExample) },
       { path: 'bar-chart', element: withSuspense(BarChartExample) },
       { path: 'area-chart', element: withSuspense(AreaChartExample) },
+      { path: 'doughnut-chart', element: withSuspense(DoughnutChartPage) },
       { path: 'gauge-chart', element: withSuspense(GaugeChartPage) },
       { path: 'chart-container', element: withSuspense(ChartContainerPage) },
       { path: 'chart-wrapper', element: withSuspense(ChartWrapperPage) },

@@ -26,6 +26,7 @@ export * from './components/data-table'
 // Date picker components
 export * from './components/date-picker'
 export * from './components/dialog'
+export * from './components/doughnut-chart'
 export * as DropdownMenu from './components/dropdown-menu'
 export * from './components/empty-state'
 export * from './components/error-boundary'
