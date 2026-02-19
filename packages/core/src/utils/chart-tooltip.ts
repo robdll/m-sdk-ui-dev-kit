@@ -189,7 +189,7 @@ export const buildChartTooltip = (
       color: COLOR.LIGHT_GREY,
       borderRadius: '0px',
       padding: '12px 16px',
-      fontFamily: "'JetBrains Mono', monospace",
+      fontFamily: `'JetBrains Mono', monospace`,
       fontSize: `${fontSize}px`,
       minWidth: `${minWidth}px`,
       zIndex: '10',
