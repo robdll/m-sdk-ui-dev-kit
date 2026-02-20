@@ -46,6 +46,11 @@ export type DataTableProps<I = unknown> = {
    */
   enableRowSelection?: boolean
   /**
+   * Enables selection of multiple rows
+   * @default true
+   */
+  enableMultiRowSelection?: boolean
+  /**
    * Specify the selected rows. If `undefined`, the selections are managed internally
    * Object with the key of row ID and a boolean specifying if the row is selected.
    * The default row ID is the index. This can be changed using `getRowId` prop
@@ -139,6 +144,7 @@ export function DataTable<I = unknown>({
   selections: providedSelections,
   onSelectionsChange,
   enablePagination = true,
+  enableMultiRowSelection = true,
   pagination: providedPagination,
   onPaginationChange,
   sorting: providedSorting,
@@ -266,6 +272,7 @@ export function DataTable<I = unknown>({
 
     // Selections
     enableRowSelection,
+    enableMultiRowSelection,
     onRowSelectionChange: setRowSelection,
 
     // Expansion
@@ -301,10 +308,19 @@ export function DataTable<I = unknown>({
 
   return (
     <div className={cn('mining-sdk-table', wrapperClassName)}>
-      <div className={cn('mining-sdk-table-content-section', contentClassName)}>
+      <div
+        className={cn(
+          'mining-sdk-table__content-section',
+          {
+            'mining-sdk-table__content-section--empty': !hasData,
+            'mining-sdk-table__content-section--no-overflow': !hasData || loading,
+          },
+          contentClassName,
+        )}
+      >
         <table
-          className={cn('mining-sdk-table-element', tableClassName, {
-            'mining-sdk-table-element--width-full': fullWidth,
+          className={cn('mining-sdk-table__element', tableClassName, {
+            'mining-sdk-table__element--width-full': fullWidth,
           })}
           style={{
             minWidth: tableBackend.getCenterTotalSize(),
@@ -317,13 +333,13 @@ export function DataTable<I = unknown>({
         </table>
         {!hasData && <EmptyTableBody hideContent={loading} />}
         {loading && (
-          <div className="mining-sdk-table-content-section-loader-overlay">
+          <div className="mining-sdk-table__loader-overlay">
             <Spinner />
           </div>
         )}
       </div>
       {showPagination && (
-        <div className="mining-sdk-table-pagination-section">
+        <div className="mining-sdk-table__pagination-section">
           <Pagination
             total={data.length}
             current={pagination.pageIndex + 1}

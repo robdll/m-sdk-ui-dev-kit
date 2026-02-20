@@ -17,7 +17,11 @@ export function TableBody<I = unknown>({
     <tbody>
       {table.getRowModel().rows.map((row) => (
         <React.Fragment key={row.id}>
-          <tr>
+          <tr
+            className={cn('mining-sdk-table__body-row', {
+              'mining-sdk-table__body-row--selected': row.getIsSelected(),
+            })}
+          >
             {row.getVisibleCells().map((cell) => (
               <td
                 key={cell.id}
@@ -49,8 +53,8 @@ export const EmptyTableBody = ({
 }): JSX.Element => {
   return (
     <div
-      className={cn('mining-sdk-table-element-empty-body', {
-        'mining-sdk-table-element-empty-body--hidden': hideContent,
+      className={cn('mining-sdk-table__empty-body', {
+        'mining-sdk-table__empty-body--hidden': hideContent,
       })}
     >
       {!hideContent && (
