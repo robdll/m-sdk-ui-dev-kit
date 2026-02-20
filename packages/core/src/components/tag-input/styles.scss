@@ -156,7 +156,8 @@
 
 .mining-sdk-tag-input__dropdown {
   min-width: var(--radix-popover-trigger-width);
-  max-height: 12rem;
+  min-height: var(--mining-sdk-tag-input-dropdown-min-height, auto);
+  max-height: var(--mining-sdk-tag-input-dropdown-max-height, 12rem);
   overflow-y: auto;
   overflow-x: hidden;
   padding: 4px; /* override popover's 16px for compact dropdown */
@@ -171,8 +172,8 @@
   padding: 0.5rem 0.75rem;
   font-size: 14px;
   cursor: pointer;
-  border-radius: 4px;
-  color: var(--mining-sdk-dropdown-menu-item-text, #e1e0e0);
+  border-radius: 0;
+  color: var(--mining-sdk-dropdown-menu-item-text, #ffffffd9);
 
   &--highlighted {
     background-color: var(--mining-sdk-color-primary, #f7931a);

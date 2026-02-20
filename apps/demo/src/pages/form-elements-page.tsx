@@ -5,6 +5,8 @@ import { CheckIcon } from '@radix-ui/react-icons'
 export const FormElementsPage = (): JSX.Element => {
   const [tagInputTags, setTagInputTags] = useState<string[]>([])
   const [tagInputCustomTags, setTagInputCustomTags] = useState<string[]>([])
+  const [tagInputMinHeightTags, setTagInputMinHeightTags] = useState<string[]>([])
+  const [tagInputMaxHeightTags, setTagInputMaxHeightTags] = useState<string[]>([])
 
   return (
     <section className="demo-section">
@@ -119,6 +121,39 @@ export const FormElementsPage = (): JSX.Element => {
                 )}
               </div>
             )}
+          />
+        </section>
+        <section>
+          <h3>TagInput with min height</h3>
+          <TagInput
+            label="Search miners"
+            value={tagInputMinHeightTags}
+            onTagsChange={setTagInputMinHeightTags}
+            options={['Bitdeer M30', 'Bitdeer A1346']}
+            placeholder="Search miners..."
+            variant="search"
+            dropdownMinHeight="16rem"
+          />
+        </section>
+        <section>
+          <h3>TagInput with max height</h3>
+          <TagInput
+            label="Search miners"
+            value={tagInputMaxHeightTags}
+            onTagsChange={setTagInputMaxHeightTags}
+            options={[
+              'Bitdeer M30',
+              'Bitdeer A1346',
+              'Bitdeer M56',
+              'Bitdeer S19XP',
+              'Bitmain Hydro',
+              'Bitmain Imm',
+              'MicroBT Wonder',
+              'MicroBT Kehua',
+            ]}
+            placeholder="Search miners..."
+            variant="search"
+            dropdownMaxHeight="6rem"
           />
         </section>
       </div>

@@ -108,6 +108,15 @@ export type TagInputProps = {
    */
   wrapperClassName?: string
   /**
+   * Minimum height of the dropdown (CSS value, e.g. '100px', '6rem')
+   */
+  dropdownMinHeight?: string
+  /**
+   * Maximum height of the dropdown (CSS value, e.g. '300px', '20rem')
+   * @default '12rem'
+   */
+  dropdownMaxHeight?: string
+  /**
    * Render custom dropdown content. When provided, replaces the default dropdown.
    * Use this to apply your own styling or structure.
    */
@@ -195,6 +204,8 @@ const TagInput = React.forwardRef<TagInputRef | HTMLInputElement, TagInputProps>
       id: idProp,
       className,
       wrapperClassName,
+      dropdownMinHeight,
+      dropdownMaxHeight,
       renderDropdown,
     },
     ref,
@@ -430,6 +441,16 @@ const TagInput = React.forwardRef<TagInputRef | HTMLInputElement, TagInputProps>
           onOpenAutoFocus={(e) => e.preventDefault()}
           onCloseAutoFocus={(e) => e.preventDefault()}
           className="mining-sdk-tag-input__dropdown"
+          style={
+            {
+              ...(dropdownMinHeight
+                ? { '--mining-sdk-tag-input-dropdown-min-height': dropdownMinHeight }
+                : {}),
+              ...(dropdownMaxHeight
+                ? { '--mining-sdk-tag-input-dropdown-max-height': dropdownMaxHeight }
+                : {}),
+            } as React.CSSProperties
+          }
         >
           {renderDropdown ? (
             renderDropdown({
