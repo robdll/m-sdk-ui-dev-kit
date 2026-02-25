@@ -14,35 +14,48 @@ const App = (): JSX.Element => {
 
   const activeSection = location.pathname === '/' ? '' : location.pathname.slice(1)
 
-  const handleNavClick = (item: SidebarMenuItem): void => {
-    navigate(`/${item.id}`)
-    mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+  const sortedAndFilteredNav = useMemo(() => {
+    // First sort all items alphabetically
+    const sorted = COMPONENT_NAV.map((section) => ({
+      ...section,
+      items: section.items
+        ? [...section.items].sort((a, b) => a.label.localeCompare(b.label))
+        : undefined,
+    }))
 
-  const filteredNav = useMemo(() => {
+    // Then apply search filter if there's a query
     if (!searchQuery.trim()) {
-      return COMPONENT_NAV
+      return sorted
     }
 
     const query = searchQuery.toLowerCase().trim()
 
-    return COMPONENT_NAV.map((section) => {
-      if (!section.items) {
-        return section.label.toLowerCase().includes(query) ? section : null
-      }
+    return sorted
+      .map((section) => {
+        if (!section.items) {
+          return section.label.toLowerCase().includes(query) ? section : null
+        }
 
-      const filteredItems = section.items.filter((item) => item.label.toLowerCase().includes(query))
+        const filteredItems = section.items.filter((item) =>
+          item.label.toLowerCase().includes(query),
+        )
 
-      if (filteredItems.length === 0 && !section.label.toLowerCase().includes(query)) {
-        return null
-      }
+        if (filteredItems.length === 0 && !section.label.toLowerCase().includes(query)) {
+          return null
+        }
 
-      return {
-        ...section,
-        items: filteredItems.length > 0 ? filteredItems : section.items,
-      }
-    }).filter(Boolean) as SidebarMenuItem[]
+        return {
+          ...section,
+          items: filteredItems.length > 0 ? filteredItems : section.items,
+        }
+      })
+      .filter(Boolean) as SidebarMenuItem[]
   }, [searchQuery])
+
+  const handleNavClick = (item: SidebarMenuItem): void => {
+    navigate(`/${item.id}`)
+    mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   const searchHeader = (
     <div className="demo-app__search">
@@ -69,7 +82,7 @@ const App = (): JSX.Element => {
   return (
     <div className="demo-app">
       <Sidebar
-        items={filteredNav}
+        items={sortedAndFilteredNav}
         activeId={activeSection}
         onItemClick={handleNavClick}
         defaultExpanded={!!searchQuery}

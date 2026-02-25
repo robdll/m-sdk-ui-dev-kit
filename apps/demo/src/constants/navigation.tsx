@@ -33,6 +33,7 @@ export const COMPONENT_NAV: SidebarMenuItem[] = [
       { id: 'form', label: 'Form (Basic)' },
       { id: 'form-enhanced', label: 'Form (Enhanced)' },
       { id: 'form-advanced', label: 'Form (Advanced)' },
+      { id: 'form-performance', label: 'Form Performance' },
     ],
   },
   {
